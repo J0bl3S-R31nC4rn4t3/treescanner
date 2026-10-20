@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0D4829" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>ScaniFlora Mobile App — Every tree has a story.</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fraunces, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sf: {
+              black: '#1C1C1C',       // Very dark gray (mostly black) - Hardware & anchor
+              dark: '#0D4829',        // Very dark cyan - Stability, nature, longevity
+              mid: '#3B9862',         // Dark moderate lime green - Active life, biodiversity
+              light: '#78C090',       // Slightly desaturated cyan - New leaves, fresh growth
+              swoosh: '#0288D1',      // Orbital Blue Swoosh
+              swooshLight: '#29B6F6', // Active scan highlight
+              cream: '#F4F8F5',       // Soft botanical mobile surface
+              tint: '#E7F2EC'         // Light leaf pill tint
+            }
+          },
+          fontFamily: {
+            serif: ['"Fraunces"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --sf-black: #1C1C1C;
+      --sf-dark: #0D4829;
+      --sf-mid: #3B9862;
+      --sf-light: #78C090;
+      --sf-swoosh: #0288D1;
+      --sf-swoosh-light: #29B6F6;
+      --sf-cream: #F4F8F5;
+    }
+
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #092616;
+      color: var(--sf-black);
+      user-select: none;
+    }
+
+    /* =====================================================
+       RESPONSIVE PHONE SHELL & FIT MODE SYSTEM
+       - <= 480px (Real Phone): 100vw x 100dvh edge-to-edge
+       - > 480px (Desktop/Tablet): Centered sleek 412px phone frame
+       - .force-fullscreen mode: Expands to full mobile screen on any device
+       ===================================================== */
+    #app-outer-stage {
+      width: 100vw;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: radial-gradient(circle at 50% 20%, #145934 0%, #071f12 75%);
+    }
+
+    #phone-app-container {
+      width: 100vw;
+      height: 100dvh;
+      background-color: var(--sf-cream);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Desktop Phone Frame styling (> 480px) when not in Full Screen Mobile mode */
+    @media (min-width: 481px) {
+      body:not(.force-fullscreen) #phone-app-container {
+        width: 100%;
+        max-width: 412px;
+        height: min(860px, 93dvh);
+        border-radius: 44px;
+        border: 10px solid #1C1C1C;
+        box-shadow:
+          0 0 0 2px #333333,
+          0 30px 70px -15px rgba(0, 0, 0, 0.65),
+          0 0 50px rgba(59, 152, 98, 0.18);
+      }
+    }
+
+    /* Full-screen override on desktop when toggled */
+    body.force-fullscreen #phone-app-container {
+      width: 100vw !important;
+      max-width: 100vw !important;
+      height: 100dvh !important;
+      border-radius: 0 !important;
+      border: none !important;
+    }
+
+    /* Smooth Momentum Scrolling for Mobile Viewport */
+    .mobile-scroll {
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .mobile-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Horizontal Carousel Snap */
+    .snap-x-mandatory {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .snap-x-mandatory::-webkit-scrollbar {
+      display: none;
+    }
+    .snap-center-child {
+      scroll-snap-align: start;
+    }
+
+    /* Laser Scanning Line Animation */
+    @keyframes scanLaserMove {
+      0% {
+        top: 8%;
+        opacity: 0.85;
+      }
+      50% {
+        top: 88%;
+        opacity: 1;
+      }
+      100% {
+        top: 8%;
+        opacity: 0.85;
+      }
+    }
+
+    .scan-laser {
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent 0%, #29B6F6 20%, #78C090 50%, #29B6F6 80%, transparent 100%);
+      box-shadow: 0 0 16px 3px rgba(41, 182, 246, 0.75), 0 0 8px 2px rgba(59, 152, 98, 0.9);
+      border-radius: 999px;
+      animation: scanLaserMove 2.2s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    /* Reticle Breathing Animation */
+    @keyframes reticlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.025); }
+    }
+    .reticle-pulse {
+      animation: reticlePulse 2.2s ease-in-out infinite;
+    }
+
+    /* Slide-Up Modal Sheet Transition */
+    #tree-detail-sheet {
+      transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #tree-detail-sheet.sheet-closed {
+      transform: translateY(105%);
+      pointer-events: none;
+    }
+    #tree-detail-sheet.sheet-open {
+      transform: translateY(0%);
+      pointer-events: auto;
+    }
+
+    /* Splash Screen Transition */
+    #splash-screen {
+      transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #splash-screen.splash-hidden {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    /* Interactive Logo Element Highlighting */
+    .logo-part {
+      transition: all 0.3s ease;
+    }
+    .logo-dimmed {
+      opacity: 0.16;
+      filter: grayscale(50%);
+    }
+    .logo-highlighted {
+      opacity: 1 !important;
+      filter: drop-shadow(0 0 8px rgba(59, 152, 98, 0.55));
+    }
+
+    /* Safe Area Support for notched phones */
+    .safe-pb {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+    .safe-pt {
+      padding-top: max(0.35rem, env(safe-area-inset-top));
+    }
+
+    /* Print only the QR Tag Plaque when printing */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printable-qr-plaque, #printable-qr-plaque * {
+        visibility: visible;
+      }
+      #printable-qr-plaque {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 320px;
+        box-shadow: none !important;
+        border: 2px solid #1C1C1C !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================================================
+       OUTER STAGE (Centers phone frame on Desktop, 100% on Phone)
+       ========================================================= -->
+  <div id="app-outer-stage">
+
+    <!-- Desktop-only Fit Mode Switcher Bar (Hidden on actual mobile <= 480px) -->
+    <div class="hidden sm:flex items-center justify-between w-full max-w-[412px] mb-2 px-2 text-white/90 text-xs z-30" id="desktop-fit-toolbar">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-sf-light animate-pulse"></span>
+        <span class="font-bold tracking-wide text-[11px] text-sf-light uppercase">ScaniFlora Mobile App</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button onclick="toggleFitMode()" id="fit-mode-btn" class="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-[11px] font-semibold text-white flex items-center gap-1.5 transition">
+          <svg class="w-3.5 h-3.5 text-sf-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          </svg>
+          <span id="fit-mode-label">Fit Mode: Phone Frame</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Exit Fullscreen Button on Desktop when in Fullscreen Mobile mode -->
+    <button onclick="toggleFitMode()" id="exit-fullscreen-btn" class="hidden fixed top-3 right-3 z-50 px-3 py-1.5 rounded-full bg-sf-black/85 text-white border border-white/20 text-xs font-bold shadow-lg items-center gap-1.5 backdrop-blur-md">
+      <svg class="w-3.5 h-3.5 text-sf-light" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+        <line x1="12" y1="18" x2="12.01" y2="18"></line>
+      </svg>
+      <span>Phone Frame Mode</span>
+    </button>
+
+    <!-- =========================================================
+         MAIN NATIVE MOBILE APPLICATION CONTAINER
+         ========================================================= -->
+    <div id="phone-app-container">
+
+      <!-- =======================================================
+           1. SPLASH / ONBOARDING LAUNCH OVERLAY
+           ======================================================= -->
+      <div id="splash-screen" class="absolute inset-0 z-50 bg-gradient-to-b from-sf-dark via-[#09351E] to-sf-black text-white flex flex-col justify-between p-6 safe-pt safe-pb">
+        
+        <!-- Top Status Pill -->
+        <div class="flex items-center justify-between text-[11px] text-sf-light/80 font-mono pt-1">
+          <span>SCANIFLORA OS • v3.0</span>
+          <button onclick="dismissSplash()" class="text-xs font-bold text-white/70 hover:text-white underline">Skip</button>
+        </div>
+
+        <!-- Center ScaniFlora Master Logo Lockup -->
+        <div class="my-auto flex flex-col items-center text-center px-2">
+          <div class="w-44 h-52 bg-white rounded-[32px] p-3.5 shadow-2xl border-4 border-sf-light/30 flex flex-col items-center justify-center relative mb-6">
+            <!-- Custom SVG ScaniFlora Logo with Orbital Blue Swoosh -->
+            <svg viewBox="0 0 340 360" class="w-full h-full">
+              <!-- Outer Mobile Frame (#1C1C1C) -->
+              <path d="M 85 105 V 38 Q 85 12 112 12 H 228 Q 255 12 255 38 V 105 H 248 V 48 H 92 V 105 Z" fill="#1C1C1C"/>
+              <circle cx="170" cy="23" r="2.5" fill="#FFFFFF"/>
+              <circle cx="136" cy="32" r="3" fill="#FFFFFF"/>
+              <rect x="150" y="30" width="44" height="4" rx="2" fill="#FFFFFF"/>
+              <path d="M 85 255 V 310 Q 85 336 112 336 H 228 Q 255 336 255 310 V 255 H 248 V 293 H 92 V 255 Z" fill="#1C1C1C"/>
+              <circle cx="170" cy="314" r="13" fill="#FFFFFF"/>
+
+              <!-- Camera Icon & Reticle Corners -->
+              <rect x="210" y="58" width="28" height="20" rx="4" fill="#1C1C1C"/>
+              <path d="M217 58 L220 53 H228 L231 58 Z" fill="#1C1C1C"/>
+              <circle cx="224" cy="68" r="5.5" fill="none" stroke="#FFFFFF" stroke-width="2"/>
+              <path d="M 88 152 V 104 Q 88 88 104 88 H 148" fill="none" stroke="#1C1C1C" stroke-width="5.5" stroke-linecap="round"/>
+              <path d="M 252 198 V 246 Q 252 262 236 262 H 192" fill="none" stroke="#1C1C1C" stroke-width="5.5" stroke-linecap="round"/>
+
+              <!-- Leaf Canopy -->
+              <path d="M170 86 C164 96, 164 106, 170 112 C176 106, 176 96, 170 86 Z" fill="#3B9862"/>
+              <path d="M154 91 C148 98, 150 109, 158 113 C162 106, 160 96, 154 91 Z" fill="#78C090"/>
+              <path d="M186 91 C192 98, 190 109, 182 113 C178 106, 180 96, 186 91 Z" fill="#78C090"/>
+              <path d="M134 100 C128 108, 132 118, 142 120 C144 112, 141 104, 134 100 Z" fill="#0D4829"/>
+              <path d="M118 116 C116 126, 124 134, 135 132 C134 122, 128 116, 118 116 Z" fill="#3B9862"/>
+              <path d="M110 136 C110 144, 120 150, 132 146 C129 138, 120 134, 110 136 Z" fill="#78C090"/>
+              <path d="M108 156 C110 166, 122 169, 133 162 C128 154, 118 152, 108 156 Z" fill="#0D4829"/>
+              <path d="M114 178 C118 186, 130 186, 138 176 C131 170, 122 172, 114 178 Z" fill="#3B9862"/>
+              <path d="M206 100 C212 108, 208 118, 198 120 C196 112, 199 104, 206 100 Z" fill="#3B9862"/>
+              <path d="M222 116 C224 126, 216 134, 205 132 C206 122, 212 116, 222 116 Z" fill="#78C090"/>
+              <path d="M230 136 C230 144, 220 150, 208 146 C211 138, 220 134, 230 136 Z" fill="#3B9862"/>
+              <path d="M232 156 C230 166, 218 169, 207 162 C212 154, 222 152, 232 156 Z" fill="#0D4829"/>
+              <path d="M226 178 C222 186, 210 186, 202 176 C209 170, 218 172, 226 178 Z" fill="#3B9862"/>
+
+              <!-- QR Matrix -->
+              <g transform="translate(135, 117)">
+                <rect x="0" y="0" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
+                <rect x="5.5" y="5.5" width="9" height="9" fill="#0D4829"/>
+                <rect x="50" y="0" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
+                <rect x="55.5" y="5.5" width="9" height="9" fill="#0D4829"/>
+                <rect x="0" y="50" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
+                <rect x="5.5" y="55.5" width="9" height="9" fill="#0D4829"/>
+                <rect x="25" y="6" width="9" height="9" fill="#0D4829"/>
+                <rect x="38" y="8" width="6" height="11" fill="#3B9862"/>
+                <rect x="8" y="26" width="11" height="7" fill="#3B9862"/>
+                <rect x="24" y="24" width="22" height="22" fill="#0D4829"/>
+                <rect x="29" y="29" width="5" height="5" fill="#FFFFFF"/>
+                <rect x="37" y="37" width="5" height="5" fill="#FFFFFF"/>
+                <rect x="52" y="26" width="12" height="9" fill="#0D4829"/>
+                <rect x="26" y="52" width="14" height="12" fill="#3B9862"/>
+                <rect x="46" y="48" width="18" height="18" fill="#0D4829"/>
+              </g>
+
+              <!-- 'S' Trunk & Roots -->
+              <path d="M192 192 C166 192, 152 200, 154 212 C156 223, 188 226, 188 241 C188 254, 166 260, 134 262 C154 256, 173 251, 173 241 C173 230, 141 226, 141 211 C141 197, 162 190, 192 192 Z" fill="#0D4829"/>
+              <path d="M185 195 C165 196, 157 202, 158 211 C159 220, 192 224, 192 240 C192 251, 178 257, 158 260 C173 255, 182 249, 182 240 C182 229, 150 224, 150 211 C150 200, 164 195, 185 195 Z" fill="#3B9862"/>
+              <path d="M168 252 C154 256, 136 260, 122 266 C138 262, 154 260, 166 259 C186 261, 198 265, 218 266 C202 257,188 253,168 252 Z" fill="#0D4829"/>
+
+              <!-- Orbital Blue Swoosh -->
+              <path d="M196 158 C236 162, 222 208, 168 230 C126 247, 114 232, 136 214 C122 230, 136 238, 170 223 C210 205, 224 168, 196 158 Z" fill="#0288D1"/>
+            </svg>
+          </div>
+
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-sf-mid/30 text-sf-light border border-sf-light/30 mb-2">
+            QR-Based Botanical Discovery Platform
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight text-white">
+            Scani<span class="text-sf-light">Flora</span>
+          </h1>
+          <p class="text-sm font-medium text-sf-light mt-1">
+            "Every tree has a story. We just gave it a QR code."
+          </p>
+          <p class="text-xs text-white/75 mt-3 max-w-[300px] leading-relaxed">
+            Scan weatherproof QR tags on trees across parks, campuses, LGUs, and ecotourism trails to unlock instant botanical profiles.
+          </p>
+        </div>
+
+        <!-- Bottom Launch Actions -->
+        <div class="space-y-2.5">
+          <button onclick="dismissSplash()" class="w-full py-3.5 px-5 rounded-2xl bg-sf-mid hover:bg-sf-light hover:text-sf-black text-white font-extrabold text-sm shadow-lg flex items-center justify-center gap-2 transition active:scale-[0.98]">
+            <span>Start Exploring</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+
+          <button onclick="dismissSplash('scan')" class="w-full py-3 px-5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/15 flex items-center justify-center gap-2 transition active:scale-[0.98]">
+            <svg class="w-4 h-4 text-sf-swooshLight" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+              <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+              <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+              <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+              <rect x="7" y="7" width="10" height="10" rx="1"></rect>
+            </svg>
+            <span>Open QR Scanner Directly</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- =======================================================
+           2. FIXED TOP MOBILE STATUS BAR & APP HEADER
+           ======================================================= -->
+      <header class="bg-sf-dark text-white shrink-0 z-20 shadow-sm safe-pt">
+        <!-- Simulated Mobile OS Status Strip -->
+        <div class="px-5 pt-1 pb-1 flex items-center justify-between text-[11px] font-medium text-white/80">
+          <span id="mobile-status-clock" class="font-mono font-semibold">09:41</span>
+          <div class="flex items-center gap-2">
+            <span class="px-1.5 py-0.2 rounded bg-sf-mid/40 text-[9px] font-mono text-sf-light tracking-wider">ECO-GPS</span>
+            <!-- Cellular & Battery Icons -->
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C6.95 3 3.15 4.85 0 7.23L12 22 24 7.25C20.85 4.87 17.05 3 12 3z"/></svg>
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="10" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><rect x="4" y="9" width="12" height="6" rx="1" fill="currentColor"/></svg>
+          </div>
+        </div>
+
+        <!-- Compact Native App Top Bar -->
+        <div class="px-4 py-2.5 flex items-center justify-between border-t border-white/10">
+          <!-- Brand Mark & Current Screen Title -->
+          <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('home')">
+            <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center p-1 shadow-sm shrink-0">
+              <svg viewBox="0 0 120 140" class="w-7 h-7">
+                <rect x="22" y="6" width="76" height="128" rx="12" fill="none" stroke="#1C1C1C" stroke-width="6"/>
+                <circle cx="60" cy="56" r="24" fill="#78C090" opacity="0.45"/>
+                <rect x="45" y="42" width="30" height="30" fill="#0D4829" rx="3"/>
+                <rect x="49" y="46" width="8" height="8" fill="#FFFFFF"/>
+                <rect x="63" y="46" width="8" height="8" fill="#FFFFFF"/>
+                <rect x="49" y="60" width="8" height="8" fill="#FFFFFF"/>
+                <path d="M46 104 C56 98, 68 98, 65 88 C62 80, 50 80, 53 72 C55 67, 63 67, 68 69" fill="none" stroke="#0D4829" stroke-width="7" stroke-linecap="round"/>
+                <path d="M36 88 C48 98, 76 80, 86 60" fill="none" stroke="#0288D1" stroke-width="5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-base font-extrabold tracking-tight leading-none text-white">Scani<span class="text-sf-light">Flora</span></span>
+                <span id="header-screen-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 text-sf-light">Home</span>
+              </div>
+              <p class="text-[10px] text-white/70 leading-tight mt-0.5">Every tree has a story.</p>
+            </div>
+          </div>
+
+          <!-- Right Action Pills: Scanned Counter & Quick QR Studio Button -->
+          <div class="flex items-center gap-1.5">
+            <button onclick="switchTab('trees')" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 flex items-center gap-1.5 text-xs font-bold transition" title="Scanned Trees Count">
+              <span class="w-2 h-2 rounded-full bg-sf-light"></span>
+              <span id="header-scanned-count" class="font-mono text-[11px]">3/8</span>
+            </button>
+
+            <button onclick="switchTab('qrtag')" class="p-2 rounded-xl bg-sf-mid hover:bg-sf-light hover:text-sf-black text-white transition shadow-sm" title="QR Tag Generator">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- =======================================================
+           3. SCROLLABLE MIDDLE VIEWPORT (5 NATIVE TAB SCREENS)
+           ======================================================= -->
+      <main id="app-scroll-viewport" class="flex-1 overflow-y-auto mobile-scroll relative bg-sf-cream">
+
+        <!-- =====================================================
+             TAB 1: HOME SCREEN (Dashboard, Scan CTA, 4-Step Carousel, Featured, Problems)
+             ===================================================== -->
+        <section id="tab-screen-home" class="tab-screen p-4 space-y-5 pb-8">
+
+          <!-- Hero Quick Scan Card -->
+          <div class="bg-gradient-to-br from-sf-dark via-[#115833] to-sf-black text-white rounded-3xl p-5 shadow-md relative overflow-hidden">
+            <!-- Decorative Concentric Arch Lines from Proposal PDF -->
+            <svg class="absolute -right-6 -bottom-6 w-36 h-36 text-sf-light/15 pointer-events-none" viewBox="0 0 120 120" fill="none">
+              <circle cx="60" cy="60" r="52" stroke="currentColor" stroke-width="3"/>
+              <circle cx="60" cy="60" r="38" stroke="currentColor" stroke-width="3"/>
+              <circle cx="60" cy="60" r="24" stroke="currentColor" stroke-width="3"/>
+            </svg>
+
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/15 text-sf-light mb-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-sf-light animate-ping"></span>
+              Ecotourism &amp; Campus Trail Ready
+            </span>
+            <h2 class="text-xl font-serif font-bold leading-snug">
+              Discover the hidden story of every tree around you.
+            </h2>
+            <p class="text-xs text-white/80 mt-1.5 leading-relaxed">
+              Point your phone at any ScaniFlora QR plaque to view its common name, scientific name, habitat, uses, and ecological importance.
+            </p>
+
+            <div class="mt-4 flex items-center gap-2.5">
+              <button onclick="switchTab('scan')" class="flex-1 py-3 px-4 rounded-2xl bg-sf-mid hover:bg-sf-light hover:text-sf-black text-white font-extrabold text-xs shadow-md flex items-center justify-center gap-2 transition active:scale-95">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                  <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                  <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                  <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                  <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                  <rect x="7" y="7" width="10" height="10" rx="1"></rect>
+                </svg>
+                <span>Scan Tree QR Tag</span>
+              </button>
+
+              <button onclick="triggerQuickDemoScan()" class="py-3 px-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-sf-light font-bold text-xs border border-white/15 transition active:scale-95" title="Instant Demo Scan">
+                Instant Demo
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Telemetry Metrics Row -->
+          <div class="grid grid-cols-3 gap-2.5">
+            <div onclick="switchTab('trees')" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm text-center cursor-pointer active:scale-95 transition">
+              <p id="home-stat-total" class="text-lg font-extrabold text-sf-dark">8</p>
+              <p class="text-[10px] font-bold uppercase text-neutral-500">Tagged Trees</p>
+            </div>
+            <div onclick="switchTab('scan')" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm text-center cursor-pointer active:scale-95 transition">
+              <p id="home-stat-scanned" class="text-lg font-extrabold text-sf-mid">3</p>
+              <p class="text-[10px] font-bold uppercase text-neutral-500">Scanned</p>
+            </div>
+            <div onclick="switchTab('qrtag')" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm text-center cursor-pointer active:scale-95 transition">
+              <p class="text-lg font-extrabold text-sf-swoosh">QR v2</p>
+              <p class="text-[10px] font-bold uppercase text-neutral-500">Tag Studio</p>
+            </div>
+          </div>
+
+          <!-- 4-Step "How It Works" Horizontal Swipe Carousel -->
+          <div>
+            <div class="flex items-center justify-between mb-2 px-0.5">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">How ScaniFlora Works</h3>
+              <span class="text-[10px] font-semibold text-sf-mid">Swipe &rarr;</span>
+            </div>
+
+            <div class="flex gap-3 overflow-x-auto snap-x-mandatory pb-1">
+              <!-- Step 01 -->
+              <div onclick="switchTab('qrtag')" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-dark text-white">STEP 01</span>
+                  <span class="text-[10px] font-bold text-sf-mid">On-Field Tag</span>
+                </div>
+                <p class="text-xs font-extrabold text-sf-black">Identify the Tree</p>
+                <p class="text-[11px] text-neutral-600 mt-1 leading-relaxed">
+                  Locate a tree that has a unique weather-resistant ScaniFlora QR code tag attached to it.
+                </p>
+              </div>
+
+              <!-- Step 02 -->
+              <div onclick="switchTab('scan')" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-swoosh text-white">STEP 02</span>
+                  <span class="text-[10px] font-bold text-sf-swoosh">Camera Reticle</span>
+                </div>
+                <p class="text-xs font-extrabold text-sf-black">Scan the QR Code</p>
+                <p class="text-[11px] text-neutral-600 mt-1 leading-relaxed">
+                  Use your smartphone camera inside ScaniFlora to scan the QR code on the tag.
+                </p>
+              </div>
+
+              <!-- Step 03 -->
+              <div onclick="openTreeProfileSheet(activeTreeId)" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-mid text-white">STEP 03</span>
+                  <span class="text-[10px] font-bold text-sf-dark">Instant Profile</span>
+                </div>
+                <p class="text-xs font-extrabold text-sf-black">Access Information</p>
+                <p class="text-[11px] text-neutral-600 mt-1 leading-relaxed">
+                  View Common Name, Scientific Name, Family Name, and full botanical description.
+                </p>
+              </div>
+
+              <!-- Step 04 -->
+              <div onclick="openTreeProfileSheet('SF-003')" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-dark text-sf-light">STEP 04</span>
+                  <span class="text-[10px] font-bold text-sf-mid">Conservation</span>
+                </div>
+                <p class="text-xs font-extrabold text-sf-black">Learn &amp; Appreciate</p>
+                <p class="text-[11px] text-neutral-600 mt-1 leading-relaxed">
+                  Explore the tree's ecological significance, uses, and interesting facts.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Featured Tagged Trees Section -->
+          <div>
+            <div class="flex items-center justify-between mb-2.5 px-0.5">
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">Nearby QR-Tagged Trees</h3>
+              <button onclick="switchTab('trees')" class="text-xs font-bold text-sf-mid hover:underline">See All (8)</button>
+            </div>
+            <div id="home-featured-trees" class="space-y-2.5">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Why ScaniFlora Matters (4 Problem & Conservation Impact Cards from Proposal Page 2) -->
+          <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-mid">Mission &amp; Impact</span>
+                <h3 class="text-sm font-serif font-bold text-sf-black">Why ScaniFlora Matters</h3>
+              </div>
+              <button onclick="switchTab('brand')" class="text-[11px] font-bold text-sf-dark bg-sf-tint px-2.5 py-1 rounded-lg">
+                About Us &rarr;
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <p class="text-xs font-extrabold text-sf-dark">Public Awareness</p>
+                <p class="text-[11px] text-neutral-600 mt-0.5 leading-snug">Helps non-forestry individuals identify trees and their ecological role.</p>
+              </div>
+              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <p class="text-xs font-extrabold text-sf-dark">Field Accessibility</p>
+                <p class="text-[11px] text-neutral-600 mt-0.5 leading-snug">Delivers instant on-site tree data via durable QR tags on trails.</p>
+              </div>
+              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <p class="text-xs font-extrabold text-sf-dark">Easy Tree Inventory</p>
+                <p class="text-[11px] text-neutral-600 mt-0.5 leading-snug">Empowers schools, LGUs, and parks to organize tree records.</p>
+              </div>
+              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <p class="text-xs font-extrabold text-sf-dark">Tree Conservation</p>
+                <p class="text-[11px] text-neutral-600 mt-0.5 leading-snug">Turns curiosity into appreciation and active protection of native flora.</p>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- =====================================================
+             TAB 2: SCAN SCREEN (Interactive Mobile Rear-Camera + Simulated Viewfinder)
+             ===================================================== -->
+        <section id="tab-screen-scan" class="tab-screen hidden min-h-full flex flex-col bg-sf-black text-white">
+
+          <!-- Scanner Top Controls Bar -->
+          <div class="px-4 py-3 flex items-center justify-between bg-black/50 backdrop-blur-md border-b border-white/10 z-10">
+            <div>
+              <h2 class="text-xs font-extrabold uppercase tracking-wider text-sf-light">Optical Tree QR Scanner</h2>
+              <p id="scan-status-subtext" class="text-[11px] text-white/70">Center tree QR plaque inside reticle</p>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <!-- Sound Chime Toggle -->
+              <button onclick="toggleSound()" id="scan-sound-btn" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-sf-light border border-white/15 transition" title="Toggle Scan Sound">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+              </button>
+
+              <!-- Live Rear Camera Toggle -->
+              <button onclick="toggleRearCamera()" id="rear-cam-btn" class="px-3 py-1.5 rounded-xl bg-sf-swoosh/30 hover:bg-sf-swoosh/50 text-sf-swooshLight border border-sf-swooshLight/40 text-[11px] font-bold flex items-center gap-1.5 transition">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+                <span id="rear-cam-label">Rear Cam</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Center Camera Viewfinder Viewport -->
+          <div class="flex-1 relative flex flex-col items-center justify-center p-6 min-h-[340px] overflow-hidden">
+            
+            <!-- Real HTML5 Rear Camera Video Feed -->
+            <video id="real-camera-video" autoplay playsinline muted class="hidden absolute inset-0 w-full h-full object-cover opacity-85"></video>
+
+            <!-- Simulated Forest Canopy & Tree Bark Ambient Backdrop -->
+            <div id="simulated-forest-backdrop" class="absolute inset-0 pointer-events-none opacity-35">
+              <svg viewBox="0 0 400 500" class="w-full h-full object-cover">
+                <defs>
+                  <radialGradient id="canopySpotlight" cx="50%" cy="45%" r="55%">
+                    <stop offset="0%" stop-color="#3B9862" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="#0D4829" stop-opacity="0.05"/>
+                  </radialGradient>
+                </defs>
+                <rect width="400" height="500" fill="#0D4829"/>
+                <circle cx="200" cy="225" r="190" fill="url(#canopySpotlight)"/>
+                <path d="M135 500 C150 370, 155 260, 140 100 L260 100 C245 260, 250 370, 265 500 Z" fill="#1C1C1C" opacity="0.65"/>
+              </svg>
+            </div>
+
+            <!-- Signature ScaniFlora Reticle Frame -->
+            <div id="scanner-reticle-frame" class="relative w-60 h-60 flex items-center justify-center reticle-pulse z-10">
+              <!-- 4 Corner Reticles -->
+              <div class="absolute top-0 left-0 w-12 h-12 border-t-[5px] border-l-[5px] border-sf-light rounded-tl-2xl"></div>
+              <div class="absolute top-0 right-0 w-12 h-12 border-t-[5px] border-r-[5px] border-sf-light rounded-tr-2xl"></div>
+              <div class="absolute bottom-0 left-0 w-12 h-12 border-b-[5px] border-l-[5px] border-sf-light rounded-bl-2xl"></div>
+              <div class="absolute bottom-0 right-0 w-12 h-12 border-b-[5px] border-r-[5px] border-sf-light rounded-br-2xl"></div>
+
+              <!-- Animated Laser Beam -->
+              <div class="scan-laser"></div>
+
+              <!-- Target Tree QR Plaque Inside Viewfinder -->
+              <div id="viewfinder-plaque-card" onclick="executeSimulatedScan(activeTreeId)" class="w-44 h-44 rounded-2xl bg-white/95 p-3 shadow-2xl flex flex-col items-center justify-center text-sf-black cursor-pointer transition-all duration-300 active:scale-95">
+                <div id="viewfinder-qr-svg" class="w-28 h-28 flex items-center justify-center"></div>
+                <p id="viewfinder-tree-name" class="text-xs font-extrabold text-sf-dark mt-1 uppercase tracking-wider truncate max-w-full">Narra</p>
+                <p id="viewfinder-tree-id" class="text-[10px] font-mono text-neutral-500">Tap Plaque to Decode</p>
+              </div>
+            </div>
+
+            <!-- Live Decoding Progress Bar -->
+            <div id="scan-decode-bar-wrap" class="w-60 mt-4 hidden z-10">
+              <div class="flex justify-between text-[10px] font-mono text-sf-swooshLight mb-1">
+                <span id="scan-decode-status">READING BOTANICAL QR...</span>
+                <span>100%</span>
+              </div>
+              <div class="w-full h-1.5 bg-white/15 rounded-full overflow-hidden">
+                <div id="scan-decode-fill" class="h-full bg-gradient-to-r from-sf-mid via-sf-light to-sf-swooshLight w-0 transition-all duration-500"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- One-Tap "Simulate Nearby Tree QR Tag Scan" Thumb Strip -->
+          <div class="bg-neutral-900/95 border-t border-white/10 p-4 z-10">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[11px] font-extrabold uppercase tracking-wider text-sf-light">
+                Simulate Nearby Tree QR Tag Scan:
+              </span>
+              <span class="text-[10px] font-mono text-white/60">1-Tap Decode</span>
+            </div>
+
+            <div id="scanner-thumb-strip" class="flex gap-2 overflow-x-auto snap-x-mandatory pb-1">
+              <!-- Populated via JS with all 8 trees -->
+            </div>
+          </div>
+
+        </section>
+
+        <!-- =====================================================
+             TAB 3: TREES SCREEN (Searchable & Filterable Mobile Inventory)
+             ===================================================== -->
+        <section id="tab-screen-trees" class="tab-screen hidden p-4 space-y-4 pb-8">
+
+          <!-- Sticky Search & Family Filter Header -->
+          <div class="bg-white rounded-2xl p-3.5 border border-sf-dark/10 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-sm font-extrabold text-sf-dark">Tree Inventory Catalog</h2>
+                <p class="text-[11px] text-neutral-500">Tap any tree to open its full story &amp; QR profile</p>
+              </div>
+              <button onclick="switchTab('qrtag'); openQrStudioMode('add');" class="px-2.5 py-1.5 rounded-xl bg-sf-dark text-white text-[11px] font-bold hover:bg-sf-mid transition">
+                + Add Tree
+              </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="relative">
+              <input
+                type="text"
+                id="trees-search-input"
+                oninput="renderMobileTreeInventory()"
+                placeholder="Search common name, scientific name, family, ID..."
+                class="w-full pl-9 pr-8 py-2.5 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"
+              />
+              <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+
+            <!-- Horizontal Family Filter Pills -->
+            <div id="trees-family-pills" class="flex gap-1.5 overflow-x-auto snap-x-mandatory pb-0.5">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Tree Cards List -->
+          <div id="mobile-trees-list" class="space-y-3">
+            <!-- Populated via JS -->
+          </div>
+
+        </section>
+
+        <!-- =====================================================
+             TAB 4: QR TAG STUDIO SCREEN (Preview Weatherproof Tags & Add New Tree)
+             ===================================================== -->
+        <section id="tab-screen-qrtag" class="tab-screen hidden p-4 space-y-4 pb-8">
+
+          <!-- Mode Switcher: Preview Existing Tree QR Tag vs Register New Tree -->
+          <div class="bg-white rounded-2xl p-1.5 border border-sf-dark/10 shadow-sm grid grid-cols-2 gap-1">
+            <button id="qr-mode-btn-preview" onclick="openQrStudioMode('preview')" class="py-2 rounded-xl text-xs font-extrabold bg-sf-dark text-white transition">
+              Inspect Tree QR Plaque
+            </button>
+            <button id="qr-mode-btn-add" onclick="openQrStudioMode('add')" class="py-2 rounded-xl text-xs font-extrabold text-sf-black/70 hover:text-sf-dark transition">
+              + Register New Tree
+            </button>
+          </div>
+
+          <!-- SUB-VIEW A: INSPECT & PRINT WEATHERPROOF QR PLAQUE -->
+          <div id="qr-studio-preview-pane" class="space-y-4">
+            
+            <!-- Tree Selector Dropdown -->
+            <div class="bg-white rounded-2xl p-4 border border-sf-dark/10 shadow-sm">
+              <label class="block text-[11px] font-extrabold uppercase tracking-wider text-sf-dark mb-1.5">
+                Select Tree from Inventory:
+              </label>
+              <select id="qr-plaque-tree-select" onchange="handlePlaqueTreeSelect(this.value)" class="w-full px-3 py-2.5 rounded-xl bg-sf-cream border border-sf-dark/20 text-xs font-bold text-sf-black focus:outline-none focus:border-sf-mid">
+                <!-- Populated via JS -->
+              </select>
+            </div>
+
+            <!-- Durable Physical ScaniFlora QR Plaque Card -->
+            <div class="flex flex-col items-center">
+              <div id="printable-qr-plaque" class="w-full max-w-[300px] bg-sf-black text-white rounded-3xl p-5 shadow-xl border-2 border-sf-dark relative overflow-hidden">
+                <!-- 4 Stainless Mounting Grommets -->
+                <span class="w-3 h-3 rounded-full bg-sf-cream border-2 border-neutral-500 absolute top-3.5 left-3.5"></span>
+                <span class="w-3 h-3 rounded-full bg-sf-cream border-2 border-neutral-500 absolute top-3.5 right-3.5"></span>
+                <span class="w-3 h-3 rounded-full bg-sf-cream border-2 border-neutral-500 absolute bottom-3.5 left-3.5"></span>
+                <span class="w-3 h-3 rounded-full bg-sf-cream border-2 border-neutral-500 absolute bottom-3.5 right-3.5"></span>
+
+                <div class="text-center border-b border-white/15 pb-2.5 mb-3.5">
+                  <p class="text-base font-extrabold tracking-tight text-sf-light">Scani<span class="text-white">Flora</span></p>
+                  <p class="text-[10px] text-white/65">Every tree has a story. We just gave it a QR code.</p>
+                </div>
+
+                <!-- High-Contrast White QR Matrix Holder -->
+                <div class="bg-white rounded-2xl p-3 mx-auto w-44 h-44 flex items-center justify-center shadow-inner">
+                  <div id="plaque-svg-container" class="w-full h-full flex items-center justify-center"></div>
+                </div>
+
+                <!-- Tree Identification Metadata -->
+                <div class="text-center mt-3.5 space-y-0.5">
+                  <p id="plaque-common-name" class="text-lg font-serif font-bold text-white truncate">Narra</p>
+                  <p id="plaque-sci-name" class="text-xs italic text-sf-light truncate">Pterocarpus indicus</p>
+                  <p id="plaque-family-name" class="text-[11px] font-semibold text-white/75">Family: Fabaceae</p>
+                </div>
+
+                <div class="mt-3.5 pt-2.5 border-t border-white/15 flex items-center justify-between text-[10px] font-mono text-sf-light">
+                  <span id="plaque-tag-id">TAG: SF-001</span>
+                  <span>SCAN WITH SCANIFLORA</span>
+                </div>
+              </div>
+
+              <!-- Plaque Action Buttons -->
+              <div class="grid grid-cols-2 gap-2.5 w-full max-w-[300px] mt-4">
+                <button onclick="executeSimulatedScan(document.getElementById('qr-plaque-tree-select').value)" class="py-3 px-3 rounded-2xl bg-sf-mid hover:bg-sf-dark text-white font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                    <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                    <rect x="7" y="7" width="10" height="10" rx="1"></rect>
+                  </svg>
+                  <span>Test Scan Tag</span>
+                </button>
+
+                <button onclick="window.print()" class="py-3 px-3 rounded-2xl bg-white border border-sf-dark/20 text-sf-dark font-extrabold text-xs shadow-sm flex items-center justify-center gap-1.5 transition active:scale-95">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                  </svg>
+                  <span>Print Plaque</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUB-VIEW B: REGISTER NEW TREE INTO INVENTORY -->
+          <form id="qr-studio-add-pane" onsubmit="handleSaveNewTree(event)" class="hidden bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3.5">
+            <div class="flex items-center justify-between border-b border-neutral-100 pb-2.5">
+              <div>
+                <h3 class="text-sm font-extrabold text-sf-dark">Add Tree to ScaniFlora</h3>
+                <p class="text-[11px] text-neutral-500">For Schools, LGUs, Parks &amp; Ecotourism Sites</p>
+              </div>
+              <button type="button" onclick="autoFillYlangYlang()" class="text-[11px] font-bold text-sf-mid bg-sf-tint px-2.5 py-1 rounded-lg">
+                Auto-Fill Demo
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-bold text-sf-black mb-1">Common Name *</label>
+                <input type="text" id="new-tree-common" required placeholder="e.g., Ylang-Ylang" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-sf-black mb-1">Scientific Name *</label>
+                <input type="text" id="new-tree-sci" required placeholder="e.g., Cananga odorata" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs italic focus:outline-none focus:border-sf-mid"/>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-bold text-sf-black mb-1">Family Name *</label>
+                <input type="text" id="new-tree-family" required placeholder="e.g., Annonaceae" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-sf-black mb-1">Habitat / Trail Zone *</label>
+                <input type="text" id="new-tree-habitat" required placeholder="e.g., Eco-Park Sector B" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-sf-black mb-1">Tree Description &amp; Characteristics *</label>
+              <textarea id="new-tree-desc" rows="2" required placeholder="Describe leaves, bark, crown structure, and native habitat..." class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-sf-black mb-1">Uses and Benefits *</label>
+              <textarea id="new-tree-uses" rows="2" required placeholder="Ecological importance, shade, medicinal or timber uses..." class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-sf-black mb-1">Interesting Facts *</label>
+              <textarea id="new-tree-facts" rows="2" required placeholder="Unique story or trivia about this tree..." class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3 px-4 rounded-2xl bg-sf-dark hover:bg-sf-mid text-white font-extrabold text-xs shadow-md transition active:scale-95">
+              Generate QR Tag &amp; Save Tree Profile
+            </button>
+          </form>
+
+        </section>
+
+        <!-- =====================================================
+             TAB 5: BRAND & TEAM SHOWCASE SCREEN
+             (Interactive Logo Breakdown, Color Palette Swatches & 5 Executive Officers)
+             ===================================================== -->
+        <section id="tab-screen-brand" class="tab-screen hidden p-4 space-y-5 pb-8">
+
+          <!-- Interactive Master Logo Breakdown Card -->
+          <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-mid">Interactive Brand Identity</span>
+                <h2 class="text-base font-serif font-bold text-sf-dark">Logo Breakdown &amp; Meaning</h2>
+              </div>
+              <button onclick="toggleBrandSwoosh()" id="brand-swoosh-toggle" class="px-2.5 py-1 rounded-lg bg-sf-swoosh/15 text-sf-swoosh font-bold text-[11px] border border-sf-swoosh/30">
+                + Blue Swoosh: ON
+              </button>
+            </div>
+
+            <!-- Interactive SVG Logo Canvas -->
+            <div class="bg-sf-cream rounded-2xl p-4 flex flex-col items-center border border-sf-dark/10">
+              <svg id="brand-interactive-logo" viewBox="0 0 340 420" class="w-48 h-auto">
+                <!-- 1. Outer Mobile Frame -->
+                <g id="bpart-frame" class="logo-part cursor-pointer" onclick="inspectLogoElement('frame')">
+                  <path d="M 85 110 V 42 Q 85 16 112 16 H 228 Q 255 16 255 42 V 110 H 248 V 52 H 92 V 110 Z" fill="#1C1C1C"/>
+                  <circle cx="170" cy="27" r="2.5" fill="#FFFFFF"/>
+                  <circle cx="136" cy="36" r="3" fill="#FFFFFF"/>
+                  <rect x="150" y="34" width="44" height="4" rx="2" fill="#FFFFFF"/>
+                  <path d="M 85 260 V 315 Q 85 342 112 342 H 228 Q 255 342 255 315 V 260 H 248 V 298 H 92 V 260 Z" fill="#1C1C1C"/>
+                  <circle cx="170" cy="320" r="14" fill="#FFFFFF"/>
+                </g>
+
+                <!-- 2. Reticle Corners & Camera Icon -->
+                <g id="bpart-reticle" class="logo-part cursor-pointer" onclick="inspectLogoElement('reticle')">
+                  <path d="M 88 158 V 110 Q 88 94 104 94 H 148" fill="none" stroke="#1C1C1C" stroke-width="5.5" stroke-linecap="round"/>
+                  <path d="M 252 204 V 252 Q 252 268 236 268 H 192" fill="none" stroke="#1C1C1C" stroke-width="5.5" stroke-linecap="round"/>
+                  <g id="bpart-camera-icon">
+                    <rect x="210" y="64" width="30" height="22" rx="4" fill="#1C1C1C"/>
+                    <path d="M218 64 L221 59 H229 L232 64 Z" fill="#1C1C1C"/>
+                    <circle cx="225" cy="75" r="6" fill="none" stroke="#FFFFFF" stroke-width="2.2"/>
+                  </g>
+                </g>
+
+                <!-- 3. Leaf Canopy & QR Code -->
+                <g id="bpart-canopy" class="logo-part cursor-pointer" onclick="inspectLogoElement('canopy')">
+                  <path d="M170 92 C164 102, 164 112, 170 118 C176 112, 176 102, 170 92 Z" fill="#3B9862"/>
+                  <path d="M154 97 C148 104, 150 115, 158 119 C162 112, 160 102, 154 97 Z" fill="#78C090"/>
+                  <path d="M186 97 C192 104, 190 115, 182 119 C178 112, 180 102, 186 97 Z" fill="#78C090"/>
+                  <path d="M134 106 C128 114, 132 124, 142 126 C144 118, 141 110, 134 106 Z" fill="#0D4829"/>
+                  <path d="M118 122 C116 132, 124 140, 135 138 C134 128, 128 122, 118 122 Z" fill="#3B9862"/>
+                  <path d="M110 142 C110 150, 120 156, 132 152 C129 144, 120 140, 110 142 Z" fill="#78C090"/>
+                  <path d="M108 162 C110 172, 122 175, 133 168 C128 160, 118 158, 108 162 Z" fill="#0D4829"/>
+                  <path d="M114 184 C118 192, 130 192, 138 182 C131 176, 122 178, 114 184 Z" fill="#3B9862"/>
+                  <path d="M124 202 C130 208, 141 205, 146 195 C138 191, 130 195, 124 202 Z" fill="#0D4829"/>
+                  <path d="M206 106 C212 114, 208 124, 198 126 C196 118, 199 110, 206 106 Z" fill="#3B9862"/>
+                  <path d="M222 122 C224 132, 216 140, 205 138 C206 128, 212 122, 222 122 Z" fill="#78C090"/>
+                  <path d="M230 142 C230 150, 220 156, 208 152 C211 144, 220 140, 230 142 Z" fill="#3B9862"/>
+                  <path d="M232 162 C230 172, 218 175, 207 168 C212 160, 222 158, 232 162 Z" fill="#0D4829"/>
+                  <path d="M226 184 C222 192, 210 192, 202 182 C209 176, 218 178, 226 184 Z" fill="#3B9862"/>
+                  <path d="M216 202 C210 208, 199 205, 194 195 C202 191, 210 195, 216 202 Z" fill="#78C090"/>
+
+                  <g transform="translate(135, 123)">
+                    <rect x="0" y="0" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
+                    <rect x="5.5" y="5.5" width="9" height="9" fill="#0D4829"/>
+                    <rect x="50" y="0" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
+                    <rect x="55.5" y="5.5" width="9" height="9" fill="#0D4829"/>
+                    <rect x="0" y="50" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
+                    <rect x="5.5" y="55.5" width="9" height="9" fill="#0D4829"/>
+                    <rect x="24" y="24" width="22" height="22" fill="#0D4829"/>
+                    <rect x="29" y="29" width="5" height="5" fill="#FFFFFF"/>
+                    <rect x="37" y="37" width="5" height="5" fill="#FFFFFF"/>
+                    <rect x="52" y="26" width="12" height="9" fill="#3B9862"/>
+                    <rect x="26" y="52" width="14" height="12" fill="#3B9862"/>
+                    <rect x="46" y="48" width="18" height="18" fill="#0D4829"/>
+                  </g>
+                </g>
+
+                <!-- 4. 'S' Trunk & Roots -->
+                <g id="bpart-trunk" class="logo-part cursor-pointer" onclick="inspectLogoElement('trunk')">
+                  <path d="M142 197 Q156 205 166 205 Q180 205 198 196 C185 207, 174 210, 165 212 Z" fill="#0D4829"/>
+                  <path d="M192 198 C166 198, 152 206, 154 218 C156 229, 188 232, 188 247 C188 260, 166 266, 134 268 C154 262, 173 257, 173 247 C173 236, 141 232, 141 217 C141 203, 162 196, 192 198 Z" fill="#0D4829"/>
+                  <path d="M185 201 C165 202, 157 208, 158 217 C159 226, 192 230, 192 246 C192 257, 178 263, 158 266 C173 261, 182 255, 182 246 C182 235, 150 230, 150 217 C150 206, 164 201, 185 201 Z" fill="#3B9862"/>
+                  <path d="M168 258 C154 262, 136 266, 122 272 C138 268, 154 266, 166 265 C186 267, 198 271, 218 272 C202 263, 188 259, 168 258 Z" fill="#0D4829"/>
+                </g>
+
+                <!-- 5. Orbital Blue Swoosh -->
+                <g id="bpart-swoosh" class="logo-part cursor-pointer" onclick="inspectLogoElement('swoosh')">
+                  <path d="M196 164 C236 168, 222 214, 168 236 C126 253, 114 238, 136 220 C122 236, 136 244, 170 229 C210 211, 224 174, 196 164 Z" fill="#0288D1"/>
+                  <path d="M202 170 C228 178, 212 214, 166 233 C136 245, 124 238, 134 226" fill="none" stroke="#29B6F6" stroke-width="2.5" stroke-linecap="round"/>
+                </g>
+
+                <!-- 6. Brand Name & Tagline -->
+                <g id="bpart-type" class="logo-part cursor-pointer" onclick="inspectLogoElement('all')">
+                  <text x="170" y="382" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="38" fill="#0D4829">ScaniFlora</text>
+                  <text x="170" y="406" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="16" fill="#6B7280">Every tree has a story.</text>
+                </g>
+              </svg>
+
+              <!-- Interactive Element Pills -->
+              <div class="flex flex-wrap justify-center gap-1.5 mt-3">
+                <button onclick="inspectLogoElement('all')" id="lpill-all" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-sf-dark text-white">All</button>
+                <button onclick="inspectLogoElement('frame')" id="lpill-frame" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">Mobile Frame</button>
+                <button onclick="inspectLogoElement('reticle')" id="lpill-reticle" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">Reticle Corners</button>
+                <button onclick="inspectLogoElement('trunk')" id="lpill-trunk" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">'S' Trunk &amp; Roots</button>
+                <button onclick="inspectLogoElement('canopy')" id="lpill-canopy" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">Leaf Canopy &amp; QR</button>
+                <button onclick="inspectLogoElement('swoosh')" id="lpill-swoosh" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-swoosh border border-sf-swoosh/30">Blue Swoosh</button>
+              </div>
+            </div>
+
+            <!-- Dynamic Explanation Box for Selected Logo Element -->
+            <div id="logo-element-explanation" class="p-3.5 rounded-2xl bg-sf-tint/80 border border-sf-dark/10">
+              <p class="text-xs font-extrabold text-sf-dark">Tap any element pill above to inspect its meaning</p>
+              <p class="text-[11px] text-neutral-700 mt-1 leading-relaxed">
+                ScaniFlora is an application that makes tree identification easier and more accessible for non-forestry individuals, naturally curious people, and tourists visiting ecotourism sites.
+              </p>
+            </div>
+          </div>
+
+          <!-- Official Color Palette Swatches (Tap to Copy HEX) -->
+          <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-serif font-bold text-sf-dark">Official Color Palettes</h3>
+              <span class="text-[10px] text-neutral-400 font-mono">Tap swatch to copy HEX</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <!-- #1C1C1C -->
+              <div onclick="copyHex('#1C1C1C')" class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 cursor-pointer active:scale-95 transition">
+                <div class="h-12 rounded-xl bg-[#1C1C1C] mb-2 flex items-end justify-end p-1.5">
+                  <span class="font-mono text-[10px] text-white/80 font-bold">#1C1C1C</span>
+                </div>
+                <p class="text-xs font-extrabold text-sf-black">Very dark gray</p>
+                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Strong modern anchor representing digital tech, hardware &amp; scanning.</p>
+              </div>
+
+              <!-- #0D4829 -->
+              <div onclick="copyHex('#0D4829')" class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 cursor-pointer active:scale-95 transition">
+                <div class="h-12 rounded-xl bg-[#0D4829] mb-2 flex items-end justify-end p-1.5">
+                  <span class="font-mono text-[10px] text-white/90 font-bold">#0D4829</span>
+                </div>
+                <p class="text-xs font-extrabold text-sf-black">Very dark cyan</p>
+                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Stability, nature, longevity, and deep-rooted knowledge of flora.</p>
+              </div>
+
+              <!-- #3B9862 -->
+              <div onclick="copyHex('#3B9862')" class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 cursor-pointer active:scale-95 transition">
+                <div class="h-12 rounded-xl bg-[#3B9862] mb-2 flex items-end justify-end p-1.5">
+                  <span class="font-mono text-[10px] text-white font-bold">#3B9862</span>
+                </div>
+                <p class="text-xs font-extrabold text-sf-black">Dark moderate lime</p>
+                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Active life, biodiversity, and energy of thriving plant ecosystems.</p>
+              </div>
+
+              <!-- #78C090 -->
+              <div onclick="copyHex('#78C090')" class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 cursor-pointer active:scale-95 transition">
+                <div class="h-12 rounded-xl bg-[#78C090] mb-2 flex items-end justify-end p-1.5">
+                  <span class="font-mono text-[10px] text-sf-black font-bold">#78C090</span>
+                </div>
+                <p class="text-xs font-extrabold text-sf-black">Desaturated cyan</p>
+                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Bright contrast representing new leaves, fresh growth &amp; vitality.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Executive Team Showcase (From Proposal Page 7) -->
+          <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-mid">Leadership Team</span>
+              <h3 class="text-sm font-serif font-bold text-sf-dark">ScaniFlora Executive Officers</h3>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <div class="w-10 h-10 rounded-xl bg-sf-dark text-white font-serif font-bold text-xs flex items-center justify-center shrink-0">LL</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-extrabold text-sf-black">Louzel Lusica</p>
+                  <p class="text-[11px] font-semibold text-sf-mid">Chief Executive Officer (CEO)</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <div class="w-10 h-10 rounded-xl bg-sf-dark text-white font-serif font-bold text-xs flex items-center justify-center shrink-0">JJ</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-extrabold text-sf-black">John Dep Jacosalem</p>
+                  <p class="text-[11px] font-semibold text-sf-swoosh">Chief Technology Officer (CTO)</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <div class="w-10 h-10 rounded-xl bg-sf-dark text-white font-serif font-bold text-xs flex items-center justify-center shrink-0">RM</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-extrabold text-sf-black">Rochille Moron</p>
+                  <p class="text-[11px] font-semibold text-sf-mid">Chief Operating Officer (COO)</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <div class="w-10 h-10 rounded-xl bg-sf-dark text-white font-serif font-bold text-xs flex items-center justify-center shrink-0">MR</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-extrabold text-sf-black">Michelle Jane Ranes</p>
+                  <p class="text-[11px] font-semibold text-sf-mid">Chief Marketing Officer (CMO)</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-sf-cream border border-sf-dark/5">
+                <div class="w-10 h-10 rounded-xl bg-sf-dark text-white font-serif font-bold text-xs flex items-center justify-center shrink-0">SA</div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs font-extrabold text-sf-black">Shaira Avegail Amar</p>
+                  <p class="text-[11px] font-semibold text-sf-mid">Chief Financial Officer (CFO)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+
+      <!-- =======================================================
+           4. SLIDE-UP FULL MOBILE TREE STORY & PROFILE SHEET
+           (Opens whenever a tree QR is scanned or a tree card is tapped)
+           ======================================================= -->
+      <div id="tree-detail-sheet" class="sheet-closed absolute inset-0 z-40 bg-sf-cream flex flex-col overflow-hidden">
+        
+        <!-- Sheet Top Sticky Action Bar -->
+        <div class="bg-sf-dark text-white px-4 py-3 flex items-center justify-between shrink-0 safe-pt shadow-md">
+          <button onclick="closeTreeProfileSheet()" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold flex items-center gap-1.5 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            <span>Back</span>
+          </button>
+
+          <span id="sheet-tag-badge" class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-sf-mid text-white">
+            QR TAG: SF-001
+          </span>
+
+          <button onclick="speakActiveTreeProfile()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-sf-light transition" title="Listen to Audio Guide">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Scrollable Tree Story Content -->
+        <div id="tree-sheet-body" class="flex-1 overflow-y-auto mobile-scroll p-4 space-y-4 pb-10">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+      </div>
+
+      <!-- =======================================================
+           5. FIXED 5-TAB THUMB-FRIENDLY BOTTOM NAVIGATION BAR
+           ======================================================= -->
+      <nav class="bg-white border-t border-sf-dark/10 px-2 pt-1.5 safe-pb flex items-center justify-around shrink-0 z-30 shadow-[0_-4px_20px_rgba(13,72,41,0.06)]">
+        
+        <!-- Tab 1: Home -->
+        <button onclick="switchTab('home')" id="bnav-home" class="bnav-btn flex-1 py-1 flex flex-col items-center gap-0.5 text-sf-dark font-extrabold transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span class="text-[10px]">Home</span>
+        </button>
+
+        <!-- Tab 2: Trees Inventory -->
+        <button onclick="switchTab('trees')" id="bnav-trees" class="bnav-btn flex-1 py-1 flex flex-col items-center gap-0.5 text-neutral-400 font-semibold transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 2L7 10h3l-2 7h8l-2-7h3L12 2z"></path>
+            <line x1="12" y1="17" x2="12" y2="22"></line>
+          </svg>
+          <span class="text-[10px]">Trees</span>
+        </button>
+
+        <!-- Tab 3: Center Raised Scan QR Button -->
+        <button onclick="switchTab('scan')" id="bnav-scan" class="bnav-btn flex-1 flex flex-col items-center justify-center -mt-5">
+          <div id="bnav-scan-circle" class="w-12 h-12 rounded-2xl bg-sf-dark text-white flex items-center justify-center shadow-lg border-4 border-white transition transform active:scale-95">
+            <svg class="w-5 h-5 text-sf-light" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+              <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+              <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+              <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+              <rect x="7" y="7" width="10" height="10" rx="1"></rect>
+            </svg>
+          </div>
+          <span class="text-[10px] font-extrabold text-sf-dark mt-0.5">Scan</span>
+        </button>
+
+        <!-- Tab 4: QR Tag Studio -->
+        <button onclick="switchTab('qrtag')" id="bnav-qrtag" class="bnav-btn flex-1 py-1 flex flex-col items-center gap-0.5 text-neutral-400 font-semibold transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span class="text-[10px]">QR Tag</span>
+        </button>
+
+        <!-- Tab 5: Brand & Team -->
+        <button onclick="switchTab('brand')" id="bnav-brand" class="bnav-btn flex-1 py-1 flex flex-col items-center gap-0.5 text-neutral-400 font-semibold transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+          <span class="text-[10px]">Brand</span>
+        </button>
+
+      </nav>
+
+      <!-- Native Mobile Toast Notification Overlay -->
+      <div id="mobile-toast-box" class="pointer-events-none absolute top-16 inset-x-4 z-50 flex flex-col items-center gap-1.5"></div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================
+       APPLICATION JAVASCRIPT LOGIC
+       ========================================================= -->
+  <script>
+    /*************************************************************
+     * 1. PRE-LOADED BOTANICAL TREE DATABASE (8 COMPLETE TREES)
+     *************************************************************/
+    const treesDatabase = [
+      {
+        id: 'SF-001',
+        commonName: 'Narra',
+        scientificName: 'Pterocarpus indicus',
+        familyName: 'Fabaceae',
+        status: 'Vulnerable',
+        habitat: 'Primary & secondary lowland rainforests, riverbanks • Station 01',
+        height: '25–35 m',
+        description: 'Narra is a large, majestic deciduous tree with a fluted trunk and a wide-spreading dome crown whose lower branches arch gracefully toward the ground. It bears compound pinnate leaves and bursts into fragrant, golden-yellow panicles of flowers before the rainy season.',
+        usesAndBenefits: 'Fixes nitrogen in soil and stabilizes riverbanks in reforestation projects. Its lustrous, termite-resistant rose-scented heartwood is prized for heirloom furniture and instruments, while bark and leaf infusions are used in traditional folk remedies.',
+        interestingFacts: 'Declared the National Tree of the Philippines in 1934. Narra flowers bloom synchronously for just a single day before carpeting the forest floor in golden petals.'
+      },
+      {
+        id: 'SF-002',
+        commonName: 'Molave',
+        scientificName: 'Vitex parviflora',
+        familyName: 'Lamiaceae',
+        status: 'Vulnerable',
+        habitat: 'Coastal limestone soils & dry lowland forests • Station 02',
+        height: '15–25 m',
+        description: 'Molave is a medium-to-large tree featuring a rugged, fluted trunk with light gray fibrous bark. Its leaves are palmately compound with three lance-shaped leaflets and clusters of small bluish-purple flowers that nourish native bees.',
+        usesAndBenefits: 'Produces one of the hardest and most durable timbers in Southeast Asia, historically used for bridges and shipbuilding. Ecologically, it is a premier pioneer species for rehabilitating rocky karst hills.',
+        interestingFacts: 'In Filipino literature and proverbs, the Molave is the ultimate emblem of resilience—immortalized in Rafael Zulueta da Costa’s classic poem "Like the Molave".'
+      },
+      {
+        id: 'SF-003',
+        commonName: 'Kamagong (Mabolo)',
+        scientificName: 'Diospyros blancoi',
+        familyName: 'Ebenaceae',
+        status: 'Critically Endangered',
+        habitat: 'Endemic lowland & medium-altitude rainforests • Station 03',
+        height: '15–20 m',
+        description: 'An indigenous evergreen tree with a dark-barked trunk and leathery oblong leaves that are silvery-hairy underneath. It bears round fruits covered in velvety reddish-brown hairs ("Mabolo") with sweet, aromatic flesh.',
+        usesAndBenefits: 'Yields "Philippine Ebony" (Kamagong), an extraordinarily dense jet-black heartwood prized for traditional martial arts Arnis sticks and fine carvings. Its fruit provides vitamins, calcium, and iron.',
+        interestingFacts: 'Kamagong wood is so dense and heavy that it does not float—it sinks immediately in water like ironwood, and is strictly protected under environmental law.'
+      },
+      {
+        id: 'SF-004',
+        commonName: 'Rain Tree (Acacia)',
+        scientificName: 'Samanea saman',
+        familyName: 'Fabaceae',
+        status: 'Least Concern',
+        habitat: 'Campus ovals, heritage parks & open avenues • Station 04',
+        height: '20–25 m',
+        description: 'An iconic wide-canopied tree with a massive symmetrical umbrella crown spanning up to 40 meters. It features bipinnate leaves that fold inward at dusk and delicate pink-and-white powder-puff flowers.',
+        usesAndBenefits: 'Provides exceptional urban cooling, carbon sequestration, and shade for schools and parks. Its grooved bark supports thriving communities of harmless epiphytic ferns and orchids.',
+        interestingFacts: 'Called the "Rain Tree" because its leaflets fold shut when rain clouds gather or at night, allowing rain and dew to fall through to keep the grass green below.'
+      },
+      {
+        id: 'SF-005',
+        commonName: 'Philippine Teak',
+        scientificName: 'Tectona philippinensis',
+        familyName: 'Lamiaceae',
+        status: 'Critically Endangered',
+        habitat: 'Endemic coastal limestone ridges • Station 05',
+        height: '15–22 m',
+        description: 'A rare, endemic tree featuring flaky pale bark, elliptic rough-textured leaves, and terminal clusters of pale violet blooms uniquely adapted to rocky limestone slopes.',
+        usesAndBenefits: 'Provides critical nesting habitat for native birds and anchors steep coastal limestone cliffs against erosion.',
+        interestingFacts: 'Unlike commercial teak, Philippine Teak is strictly endemic to small pockets of Batangas and Mindoro in the Philippines, making every tagged tree a living genetic treasure.'
+      },
+      {
+        id: 'SF-006',
+        commonName: 'White Lauan',
+        scientificName: 'Shorea contorta',
+        familyName: 'Dipterocarpaceae',
+        status: 'Critically Endangered',
+        habitat: 'Dipterocarp lowland rainforest canopy • Station 06',
+        height: '35–50 m',
+        description: 'A towering emergent rainforest giant with a straight cylindrical trunk and prominent buttress roots. Its fruits possess five elongated wing-like sepals that spin like helicopters in the wind.',
+        usesAndBenefits: 'Forms the structural backbone of Philippine tropical rainforests, regulating watershed retention and forest microclimates.',
+        interestingFacts: 'Its winged seeds are aerodynamically twisted (hence "contorta"), allowing them to autorotate gently and disperse far from the parent tree.'
+      },
+      {
+        id: 'SF-007',
+        commonName: 'English Oak',
+        scientificName: 'Quercus robur',
+        familyName: 'Fagaceae',
+        status: 'Least Concern',
+        habitat: 'Temperate botanical heritage meadows • Station 07',
+        height: '20–40 m',
+        description: 'Featured in the ScaniFlora presentation imagery, this long-lived deciduous tree is recognized by its deeply fissured bark, sturdy spreading branches, multi-lobed leaves, and acorns held in scaly cups.',
+        usesAndBenefits: 'Supports one of the highest biodiversity counts of insects, lichens, birds, and mammals of any tree species.',
+        interestingFacts: 'An English Oak can live for over 1,000 years—spending 300 years growing, 300 years as a mature giant, and 300 years gracefully sheltering wildlife.'
+      },
+      {
+        id: 'SF-008',
+        commonName: 'Balete (Strangler Fig)',
+        scientificName: 'Ficus virens',
+        familyName: 'Moraceae',
+        status: 'Least Concern',
+        habitat: 'Ecotourism boardwalks & riverine forests • Station 08',
+        height: '18–30 m',
+        description: 'A remarkable fig tree characterized by an intricate lattice of aerial prop roots that descend from its branches to the ground, eventually forming a massive buttressed trunk.',
+        usesAndBenefits: 'Acts as a keystone ecological species in tropical forests by producing figs year-round that sustain fruit bats, hornbills, and native wildlife.',
+        interestingFacts: 'Each species of Ficus has a mutually dependent relationship with its own unique species of tiny fig wasp.'
+      }
+    ];
+
+    // App State
+    let activeTab = 'home';
+    let activeTreeId = 'SF-001';
+    let scannedTreeIds = ['SF-001', 'SF-003', 'SF-007'];
+    let selectedFamilyFilter = 'ALL';
+    let soundActive = true;
+    let rearCameraStream = null;
+    let showLogoSwoosh = true;
+
+    /*************************************************************
+     * 2. DETERMINISTIC SVG QR CODE GENERATOR (WITH LEAF CANOPY)
+     *************************************************************/
+    function buildTreeQRCodeSVG(seedText, showLeafCrown = true) {
+      let hash = 2166136261;
+      for (let i = 0; i < seedText.length; i++) {
+        hash ^= seedText.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+
+      const gridSize = 13;
+      const cell = 6;
+      const offset = 11;
+      let modules = '';
+
+      function isReserved(r, c) {
+        if (r < 4 && c < 4) return true;
+        if (r < 4 && c >= gridSize - 4) return true;
+        if (r >= gridSize - 4 && c < 4) return true;
+        if (r >= 5 && r <= 7 && c >= 5 && c <= 7) return true;
+        return false;
+      }
+
+      for (let r = 0; r < gridSize; r++) {
+        for (let c = 0; c < gridSize; c++) {
+          if (isReserved(r, c)) continue;
+          const bit = (r * gridSize + c) % 28;
+          const v = ((hash >>> (bit % 22)) ^ (r * 7 + c * 13)) & 3;
+          if (v !== 0) {
+            const color = v === 1 ? '#0D4829' : (v === 2 ? '#1C1C1C' : '#3B9862');
+            modules += `<rect x="${offset + c * cell}" y="${offset + r * cell}" width="${cell - 0.85}" height="${cell - 0.85}" rx="1" fill="${color}"/>`;
+          }
+        }
+      }
+
+      const fSize = 3.5 * cell;
+      const far = offset + (gridSize - 3.5) * cell;
+
+      return `
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          ${showLeafCrown ? `
+            <path d="M50 1.5 C46 6.5, 46 10.5, 50 13.5 C54 10.5, 54 6.5, 50 1.5 Z" fill="#3B9862"/>
+            <path d="M36 4.5 C33 8.5, 35 12.5, 40 13.5 C41 9.5, 39 6.5, 36 4.5 Z" fill="#78C090"/>
+            <path d="M64 4.5 C67 8.5, 65 12.5, 60 13.5 C59 9.5, 61 6.5, 64 4.5 Z" fill="#78C090"/>
+          ` : ''}
+          <rect x="${offset}" y="${offset}" width="${fSize}" height="${fSize}" rx="3" fill="none" stroke="#0D4829" stroke-width="3"/>
+          <rect x="${offset + 5.5}" y="${offset + 5.5}" width="${fSize - 11}" height="${fSize - 11}" rx="1.5" fill="#0D4829"/>
+          <rect x="${far}" y="${offset}" width="${fSize}" height="${fSize}" rx="3" fill="none" stroke="#0D4829" stroke-width="3"/>
+          <rect x="${far + 5.5}" y="${offset + 5.5}" width="${fSize - 11}" height="${fSize - 11}" rx="1.5" fill="#0D4829"/>
+          <rect x="${offset}" y="${far}" width="${fSize}" height="${fSize}" rx="3" fill="none" stroke="#0D4829" stroke-width="3"/>
+          <rect x="${offset + 5.5}" y="${far + 5.5}" width="${fSize - 11}" height="${fSize - 11}" rx="1.5" fill="#0D4829"/>
+          ${modules}
+          <rect x="40" y="40" width="20" height="20" rx="4" fill="#0D4829"/>
+          <path d="M53 45 C47 45, 46 49, 50 50 C54 51, 53 55, 47 55" fill="none" stroke="#78C090" stroke-width="2.6" stroke-linecap="round"/>
+        </svg>
+      `;
+    }
+
+    /*************************************************************
+     * 3. FIT MODE TOGGLE (PHONE FRAME vs FULL SCREEN MOBILE)
+     *************************************************************/
+    function toggleFitMode() {
+      const isFull = document.body.classList.toggle('force-fullscreen');
+      const label = document.getElementById('fit-mode-label');
+      const toolbar = document.getElementById('desktop-fit-toolbar');
+      const exitBtn = document.getElementById('exit-fullscreen-btn');
+
+      if (isFull) {
+        if (label) label.textContent = 'Fit Mode: Full Screen Mobile';
+        if (toolbar) toolbar.classList.add('hidden');
+        if (exitBtn) {
+          exitBtn.classList.remove('hidden');
+          exitBtn.classList.add('flex');
+        }
+        showToast('Full Screen Mobile Viewport Active (100vw × 100dvh)');
+      } else {
+        if (label) label.textContent = 'Fit Mode: Phone Frame';
+        if (toolbar) toolbar.classList.remove('hidden');
+        if (exitBtn) {
+          exitBtn.classList.add('hidden');
+          exitBtn.classList.remove('flex');
+        }
+        showToast('Phone Frame Mode Active (412px)');
+      }
+    }
+
+    function dismissSplash(targetTab) {
+      const splash = document.getElementById('splash-screen');
+      splash.classList.add('splash-hidden');
+      if (targetTab) {
+        switchTab(targetTab);
+      }
+    }
+
+    /*************************************************************
+     * 4. 5-TAB NATIVE NAVIGATION CONTROLLER
+     *************************************************************/
+    function switchTab(tabId) {
+      activeTab = tabId;
+      closeTreeProfileSheet(true);
+
+      const tabs = ['home', 'scan', 'trees', 'qrtag', 'brand'];
+      const titles = {
+        home: 'Home',
+        scan: 'QR Scanner',
+        trees: 'Trees Catalog',
+        qrtag: 'QR Tag Studio',
+        brand: 'Brand & Team'
+      };
+
+      tabs.forEach(t => {
+        const screen = document.getElementById(`tab-screen-${t}`);
+        const navBtn = document.getElementById(`bnav-${t}`);
+        if (t === tabId) {
+          screen.classList.remove('hidden');
+          if (t !== 'scan') {
+            navBtn.classList.remove('text-neutral-400', 'font-semibold');
+            navBtn.classList.add('text-sf-dark', 'font-extrabold');
+          } else {
+            document.getElementById('bnav-scan-circle').classList.add('ring-4', 'ring-sf-light/50', 'bg-sf-mid');
+          }
+        } else {
+          screen.classList.add('hidden');
+          if (t !== 'scan') {
+            navBtn.classList.add('text-neutral-400', 'font-semibold');
+            navBtn.classList.remove('text-sf-dark', 'font-extrabold');
+          } else {
+            document.getElementById('bnav-scan-circle').classList.remove('ring-4', 'ring-sf-light/50', 'bg-sf-mid');
+          }
+        }
+      });
+
+      document.getElementById('header-screen-badge').textContent = titles[tabId] || 'Home';
+      document.getElementById('app-scroll-viewport').scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (tabId === 'scan') {
+        updateViewfinderPlaque(getTree(activeTreeId));
+      } else if (tabId === 'trees') {
+        renderMobileTreeInventory();
+      } else if (tabId === 'qrtag') {
+        populatePlaqueSelectDropdown();
+      }
+    }
+
+    function getTree(id) {
+      return treesDatabase.find(t => t.id === id) || treesDatabase[0];
+    }
+
+    function statusPillStyle(status) {
+      if (status === 'Critically Endangered') return 'bg-red-100 text-red-800 border-red-200';
+      if (status === 'Vulnerable') return 'bg-amber-100 text-amber-800 border-amber-200';
+      return 'bg-sf-tint text-sf-dark border-sf-light/50';
+    }
+
+    /*************************************************************
+     * 5. RENDERING HOME, TREES INVENTORY & SLIDE-UP SHEET
+     *************************************************************/
+    function updateAllCounters() {
+      document.getElementById('header-scanned-count').textContent = `${scannedTreeIds.length}/${treesDatabase.length}`;
+      document.getElementById('home-stat-total').textContent = treesDatabase.length;
+      document.getElementById('home-stat-scanned').textContent = scannedTreeIds.length;
+    }
+
+    function renderHomeFeaturedTrees() {
+      const container = document.getElementById('home-featured-trees');
+      if (!container) return;
+
+      container.innerHTML = treesDatabase.slice(0, 4).map(tree => `
+        <div onclick="openTreeProfileSheet('${tree.id}')" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm flex items-center gap-3 cursor-pointer active:scale-[0.99] transition">
+          <div class="w-14 h-14 rounded-xl bg-sf-cream p-1.5 shrink-0 border border-sf-dark/10">
+            ${buildTreeQRCodeSVG(tree.id + tree.scientificName, false)}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between gap-1">
+              <span class="font-mono text-[10px] font-bold text-sf-mid">${tree.id}</span>
+              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.status)}">${tree.status}</span>
+            </div>
+            <h4 class="text-sm font-extrabold text-sf-black truncate mt-0.5">${tree.commonName}</h4>
+            <p class="text-[11px] italic text-neutral-500 truncate">${tree.scientificName} • ${tree.familyName}</p>
+          </div>
+          <svg class="w-4 h-4 text-neutral-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      `).join('');
+    }
+
+    function renderScannerThumbStrip() {
+      const strip = document.getElementById('scanner-thumb-strip');
+      if (!strip) return;
+
+      strip.innerHTML = treesDatabase.map(tree => `
+        <button onclick="executeSimulatedScan('${tree.id}')" class="snap-center-child shrink-0 px-3 py-2 rounded-2xl ${tree.id === activeTreeId ? 'bg-sf-mid text-white border-sf-light' : 'bg-white/10 text-white border-white/15'} border text-left flex items-center gap-2.5 active:scale-95 transition">
+          <div class="w-8 h-8 rounded-lg bg-white p-1 shrink-0">
+            ${buildTreeQRCodeSVG(tree.id + tree.scientificName, false)}
+          </div>
+          <div>
+            <p class="text-xs font-extrabold leading-none">${tree.commonName}</p>
+            <p class="text-[10px] font-mono text-sf-light mt-0.5">${tree.id}</p>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function renderMobileTreeInventory() {
+      const searchEl = document.getElementById('trees-search-input');
+      const pillsEl = document.getElementById('trees-family-pills');
+      const listEl = document.getElementById('mobile-trees-list');
+      if (!listEl) return;
+
+      const families = ['ALL', ...new Set(treesDatabase.map(t => t.familyName))];
+      pillsEl.innerHTML = families.map(fam => `
+        <button onclick="setFamilyFilter('${fam}')" class="snap-center-child shrink-0 px-3 py-1 rounded-full text-[11px] font-bold transition ${selectedFamilyFilter === fam ? 'bg-sf-dark text-white' : 'bg-sf-cream text-sf-black/75 border border-sf-dark/10'}">
+          ${fam === 'ALL' ? `All (${treesDatabase.length})` : fam}
+        </button>
+      `).join('');
+
+      const q = (searchEl ? searchEl.value : '').trim().toLowerCase();
+      const filtered = treesDatabase.filter(t => {
+        const matchQ = !q ||
+          t.commonName.toLowerCase().includes(q) ||
+          t.scientificName.toLowerCase().includes(q) ||
+          t.familyName.toLowerCase().includes(q) ||
+          t.id.toLowerCase().includes(q);
+        const matchFam = selectedFamilyFilter === 'ALL' || t.familyName === selectedFamilyFilter;
+        return matchQ && matchFam;
+      });
+
+      listEl.innerHTML = filtered.map(tree => `
+        <div onclick="openTreeProfileSheet('${tree.id}')" class="bg-white rounded-2xl p-3.5 border border-sf-dark/10 shadow-sm space-y-2.5 cursor-pointer active:scale-[0.99] transition">
+          <div class="flex items-start gap-3">
+            <div class="w-16 h-16 rounded-xl bg-sf-cream p-1.5 border border-sf-dark/15 shrink-0">
+              ${buildTreeQRCodeSVG(tree.id + tree.scientificName, true)}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-1">
+                <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-sf-black text-sf-light">${tree.id}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.status)}">${tree.status}</span>
+              </div>
+              <h3 class="text-base font-extrabold text-sf-black mt-1 truncate">${tree.commonName}</h3>
+              <p class="text-xs italic text-sf-dark font-medium truncate">${tree.scientificName}</p>
+              <p class="text-[11px] text-neutral-500 font-semibold">Family: ${tree.familyName}</p>
+            </div>
+          </div>
+          <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">${tree.description}</p>
+          <div class="pt-2 border-t border-neutral-100 flex items-center justify-between text-xs">
+            <span class="text-[11px] text-neutral-500 truncate max-w-[180px]">${tree.habitat}</span>
+            <span class="font-extrabold text-sf-mid">Read Story &rarr;</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setFamilyFilter(fam) {
+      selectedFamilyFilter = fam;
+      renderMobileTreeInventory();
+    }
+
+    /*************************************************************
+     * 6. SLIDE-UP TREE STORY & PROFILE SHEET
+     *************************************************************/
+    function openTreeProfileSheet(treeId) {
+      const tree = getTree(treeId);
+      activeTreeId = tree.id;
+
+      document.getElementById('sheet-tag-badge').textContent = `QR TAG: ${tree.id}`;
+      const body = document.getElementById('tree-sheet-body');
+
+      body.innerHTML = `
+        <!-- Top Botanical Identity Card -->
+        <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm flex items-center gap-3.5">
+          <div class="w-20 h-20 rounded-2xl bg-sf-cream p-2 border-2 border-sf-black shrink-0">
+            ${buildTreeQRCodeSVG(tree.id + tree.scientificName, true)}
+          </div>
+          <div class="flex-1 min-w-0">
+            <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.status)} mb-1">
+              ${tree.status}
+            </span>
+            <h2 class="text-xl font-serif font-bold text-sf-black leading-tight">${tree.commonName}</h2>
+            <p class="text-xs italic font-semibold text-sf-mid mt-0.5">${tree.scientificName}</p>
+            <p class="text-[11px] font-bold text-neutral-500 mt-0.5">Family: ${tree.familyName}</p>
+          </div>
+        </div>
+
+        <!-- Taxonomy & Habitat Grid -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="bg-white p-3 rounded-2xl border border-sf-dark/10">
+            <span class="text-[10px] font-bold uppercase text-neutral-400 block">Common Name</span>
+            <span class="text-xs font-extrabold text-sf-black">${tree.commonName}</span>
+          </div>
+          <div class="bg-white p-3 rounded-2xl border border-sf-dark/10">
+            <span class="text-[10px] font-bold uppercase text-neutral-400 block">Scientific Name</span>
+            <span class="text-xs font-bold italic text-sf-dark">${tree.scientificName}</span>
+          </div>
+          <div class="bg-white p-3 rounded-2xl border border-sf-dark/10">
+            <span class="text-[10px] font-bold uppercase text-neutral-400 block">Family Name</span>
+            <span class="text-xs font-extrabold text-sf-mid">${tree.familyName}</span>
+          </div>
+          <div class="bg-white p-3 rounded-2xl border border-sf-dark/10">
+            <span class="text-[10px] font-bold uppercase text-neutral-400 block">Typical Height</span>
+            <span class="text-xs font-mono font-bold text-sf-black">${tree.height}</span>
+          </div>
+        </div>
+
+        <!-- Habitat Strip -->
+        <div class="bg-sf-tint rounded-2xl p-3.5 border border-sf-dark/10 flex items-center gap-2.5">
+          <svg class="w-5 h-5 text-sf-dark shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-dark block">Habitat &amp; Field Station</span>
+            <span class="text-xs font-semibold text-sf-black">${tree.habitat}</span>
+          </div>
+        </div>
+
+        <!-- Tree Description -->
+        <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-sf-dark"></span>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">Tree Description &amp; Characteristics</h3>
+          </div>
+          <p class="text-xs text-neutral-700 leading-relaxed">${tree.description}</p>
+        </div>
+
+        <!-- Uses and Benefits -->
+        <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-sf-mid"></span>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">Uses and Benefits</h3>
+          </div>
+          <p class="text-xs text-neutral-700 leading-relaxed">${tree.usesAndBenefits}</p>
+        </div>
+
+        <!-- Interesting Facts -->
+        <div class="bg-sf-dark text-white rounded-3xl p-4 shadow-sm space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-sf-light"></span>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-light">Interesting Facts</h3>
+          </div>
+          <p class="text-xs text-white/90 leading-relaxed">${tree.interestingFacts}</p>
+        </div>
+
+        <!-- Bottom Sheet Actions -->
+        <div class="grid grid-cols-2 gap-2.5 pt-1">
+          <button onclick="speakActiveTreeProfile()" class="py-3 px-4 rounded-2xl bg-white border border-sf-dark/20 text-sf-dark font-extrabold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition">
+            <svg class="w-4 h-4 text-sf-mid" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <span>Audio Guide</span>
+          </button>
+
+          <button onclick="closeTreeProfileSheet(); switchTab('qrtag'); handlePlaqueTreeSelect('${tree.id}');" class="py-3 px-4 rounded-2xl bg-sf-mid text-white font-extrabold text-xs flex items-center justify-center gap-1.5 active:scale-95 transition">
+            <span>View QR Plaque</span>
+            <span>&rarr;</span>
+          </button>
+        </div>
+      `;
+
+      const sheet = document.getElementById('tree-detail-sheet');
+      sheet.classList.remove('sheet-closed');
+      sheet.classList.add('sheet-open');
+    }
+
+    function closeTreeProfileSheet(silent) {
+      const sheet = document.getElementById('tree-detail-sheet');
+      sheet.classList.remove('sheet-open');
+      sheet.classList.add('sheet-closed');
+      if (!silent && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speakActiveTreeProfile() {
+      const tree = getTree(activeTreeId);
+      if ('speechSynthesis' in window && tree) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(
+          `${tree.commonName}, scientific name ${tree.scientificName}, from the family ${tree.familyName}. ${tree.description} Interesting fact: ${tree.interestingFacts}`
+        );
+        utter.rate = 0.95;
+        window.speechSynthesis.speak(utter);
+        showToast(`Playing audio story for ${tree.commonName}`);
+      } else {
+        showToast(`Audio guide: ${tree.commonName} (${tree.scientificName})`);
+      }
+    }
+
+    /*************************************************************
+     * 7. QR SCANNER ENGINE (SIMULATED & REAL REAR CAMERA)
+     *************************************************************/
+    function updateViewfinderPlaque(tree) {
+      const svgBox = document.getElementById('viewfinder-qr-svg');
+      const nameEl = document.getElementById('viewfinder-tree-name');
+      const idEl = document.getElementById('viewfinder-tree-id');
+      if (svgBox && tree) {
+        svgBox.innerHTML = buildTreeQRCodeSVG(tree.id + tree.scientificName, true);
+        nameEl.textContent = tree.commonName;
+        idEl.textContent = `${tree.id} • Tap to Scan`;
+      }
+      renderScannerThumbStrip();
+    }
+
+    function playChime() {
+      if (!soundActive) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.exponentialRampToValueAtTime(1318.5, now + 0.14);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.24);
+      } catch (e) {}
+    }
+
+    function toggleSound() {
+      soundActive = !soundActive;
+      const btn = document.getElementById('scan-sound-btn');
+      btn.classList.toggle('opacity-40', !soundActive);
+      showToast(soundActive ? 'Scanner chime enabled' : 'Scanner chime muted');
+    }
+
+    function executeSimulatedScan(treeId) {
+      const tree = getTree(treeId);
+      activeTreeId = tree.id;
+
+      if (activeTab !== 'scan') {
+        switchTab('scan');
+      }
+      updateViewfinderPlaque(tree);
+
+      const barWrap = document.getElementById('scan-decode-bar-wrap');
+      const barFill = document.getElementById('scan-decode-fill');
+      const statusText = document.getElementById('scan-decode-status');
+      const plaqueCard = document.getElementById('viewfinder-plaque-card');
+
+      barWrap.classList.remove('hidden');
+      barFill.style.width = '20%';
+      statusText.textContent = `DECODING ${tree.id}...`;
+      plaqueCard.classList.add('scale-105', 'ring-4', 'ring-sf-swooshLight');
+
+      setTimeout(() => {
+        barFill.style.width = '100%';
+        statusText.textContent = `MATCHED: ${tree.commonName.toUpperCase()}`;
+        playChime();
+      }, 250);
+
+      setTimeout(() => {
+        if (!scannedTreeIds.includes(tree.id)) {
+          scannedTreeIds.unshift(tree.id);
+        }
+        updateAllCounters();
+        barWrap.classList.add('hidden');
+        barFill.style.width = '0%';
+        plaqueCard.classList.remove('scale-105', 'ring-4', 'ring-sf-swooshLight');
+
+        openTreeProfileSheet(tree.id);
+        showToast(`QR Decoded: ${tree.commonName} (${tree.scientificName})`);
+      }, 720);
+    }
+
+    function triggerQuickDemoScan() {
+      const idx = treesDatabase.findIndex(t => t.id === activeTreeId);
+      const next = treesDatabase[(idx + 1) % treesDatabase.length];
+      executeSimulatedScan(next.id);
+    }
+
+    async function toggleRearCamera() {
+      const video = document.getElementById('real-camera-video');
+      const label = document.getElementById('rear-cam-label');
+
+      if (rearCameraStream) {
+        rearCameraStream.getTracks().forEach(t => t.stop());
+        rearCameraStream = null;
+        video.classList.add('hidden');
+        label.textContent = 'Rear Cam';
+        showToast('Switched to simulated viewfinder');
+        return;
+      }
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showToast('Camera API unavailable; using simulated viewfinder');
+        return;
+      }
+
+      try {
+        rearCameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' } }
+        });
+        video.srcObject = rearCameraStream;
+        video.classList.remove('hidden');
+        label.textContent = 'Stop Cam';
+        showToast('Live rear camera active! Tap any QR tag below to decode.');
+      } catch (err) {
+        showToast('Camera permission declined; using simulated scanner.');
+      }
+    }
+
+    /*************************************************************
+     * 8. QR TAG STUDIO & NEW TREE REGISTRATION
+     *************************************************************/
+    function openQrStudioMode(mode) {
+      const previewPane = document.getElementById('qr-studio-preview-pane');
+      const addPane = document.getElementById('qr-studio-add-pane');
+      const btnPrev = document.getElementById('qr-mode-btn-preview');
+      const btnAdd = document.getElementById('qr-mode-btn-add');
+
+      if (mode === 'preview') {
+        previewPane.classList.remove('hidden');
+        addPane.classList.add('hidden');
+        btnPrev.className = 'py-2 rounded-xl text-xs font-extrabold bg-sf-dark text-white transition';
+        btnAdd.className = 'py-2 rounded-xl text-xs font-extrabold text-sf-black/70 hover:text-sf-dark transition';
+      } else {
+        previewPane.classList.add('hidden');
+        addPane.classList.remove('hidden');
+        btnAdd.className = 'py-2 rounded-xl text-xs font-extrabold bg-sf-dark text-white transition';
+        btnPrev.className = 'py-2 rounded-xl text-xs font-extrabold text-sf-black/70 hover:text-sf-dark transition';
+      }
+    }
+
+    function populatePlaqueSelectDropdown() {
+      const select = document.getElementById('qr-plaque-tree-select');
+      if (!select) return;
+      select.innerHTML = treesDatabase.map(t => `
+        <option value="${t.id}" ${t.id === activeTreeId ? 'selected' : ''}>
+          ${t.id} — ${t.commonName} (${t.scientificName})
+        </option>
+      `).join('');
+      renderPlaqueCard(activeTreeId);
+    }
+
+    function handlePlaqueTreeSelect(treeId) {
+      activeTreeId = treeId;
+      openQrStudioMode('preview');
+      populatePlaqueSelectDropdown();
+    }
+
+    function renderPlaqueCard(treeId) {
+      const tree = getTree(treeId);
+      document.getElementById('plaque-common-name').textContent = tree.commonName;
+      document.getElementById('plaque-sci-name').textContent = tree.scientificName;
+      document.getElementById('plaque-family-name').textContent = `Family: ${tree.familyName}`;
+      document.getElementById('plaque-tag-id').textContent = `TAG: ${tree.id}`;
+      document.getElementById('plaque-svg-container').innerHTML = buildTreeQRCodeSVG(tree.id + tree.scientificName, true);
+    }
+
+    function autoFillYlangYlang() {
+      document.getElementById('new-tree-common').value = 'Ylang-Ylang';
+      document.getElementById('new-tree-sci').value = 'Cananga odorata';
+      document.getElementById('new-tree-family').value = 'Annonaceae';
+      document.getElementById('new-tree-habitat').value = 'Fragrant Botanical Walk • Station 09';
+      document.getElementById('new-tree-desc').value = 'A fast-growing tropical tree famous for its drooping, long-petalled greenish-yellow flowers that release a rich floral fragrance at dusk.';
+      document.getElementById('new-tree-uses').value = 'Essential oil distilled from its flowers is prized globally in fine perfumery and aromatherapy. Also planted as an ornamental shade tree.';
+      document.getElementById('new-tree-facts').value = 'The name "Ylang-Ylang" comes from the Tagalog word "ilang-ilang", meaning "flower of flowers" fluttering in the breeze.';
+      showToast('Auto-filled Ylang-Ylang botanical data');
+    }
+
+    function handleSaveNewTree(e) {
+      e.preventDefault();
+      const nextNum = treesDatabase.length + 1;
+      const newId = `SF-00${nextNum}`;
+      const newTree = {
+        id: newId,
+        commonName: document.getElementById('new-tree-common').value.trim(),
+        scientificName: document.getElementById('new-tree-sci').value.trim(),
+        familyName: document.getElementById('new-tree-family').value.trim(),
+        status: 'Least Concern',
+        habitat: document.getElementById('new-tree-habitat').value.trim(),
+        height: '12–20 m',
+        description: document.getElementById('new-tree-desc').value.trim(),
+        usesAndBenefits: document.getElementById('new-tree-uses').value.trim(),
+        interestingFacts: document.getElementById('new-tree-facts').value.trim()
+      };
+
+      treesDatabase.unshift(newTree);
+      activeTreeId = newTree.id;
+      scannedTreeIds.unshift(newTree.id);
+
+      document.getElementById('qr-studio-add-pane').reset();
+      updateAllCounters();
+      renderHomeFeaturedTrees();
+      openQrStudioMode('preview');
+      populatePlaqueSelectDropdown();
+      showToast(`Created QR Tag ${newTree.id} for ${newTree.commonName}!`);
+    }
+
+    /*************************************************************
+     * 9. BRAND TAB: LOGO ELEMENT INSPECTOR & HEX CLIPBOARD
+     *************************************************************/
+    const logoExplanations = {
+      all: {
+        title: 'Complete ScaniFlora Emblem',
+        desc: 'Combines a smartphone silhouette, scanning reticle corners, a stylized "S" tree trunk with deep roots, a leaf canopy integrated with a QR code, and an orbital blue scanning swoosh.'
+      },
+      frame: {
+        title: 'Outer Frame Elements — Mobile Frame',
+        desc: 'Set inside a mobile smartphone silhouette with speaker, camera, and home button. Emphasizes ScaniFlora’s identity as a mobile application and holistic digital information resource.'
+      },
+      reticle: {
+        title: 'Scanning Reticle Corners & Camera',
+        desc: 'Symbolizes camera targeting, active focus, framing, and scanning functionality—capturing and reading botanical QR codes attached to trees.'
+      },
+      trunk: {
+        title: "'S' Trunk & Grounding Roots",
+        desc: 'The tree trunk and roots are stylized into the letter "S", representing the initial for "Scan". The roots signify deep knowledge and connection to the earth.'
+      },
+      canopy: {
+        title: 'Leaf Canopy & Functional QR Code',
+        desc: 'A lush green leaf canopy seamlessly integrated with a QR code grid, symbolizing the fusion of nature ("Flora") and modern scanning technology ("Scan").'
+      },
+      swoosh: {
+        title: 'Orbital Blue Swoosh (Scanning Path)',
+        desc: 'Wraps dynamically around the central tree trunk to represent the path of information flow, digital network connectivity, and the action of scanning.'
+      }
+    };
+
+    function inspectLogoElement(key) {
+      const parts = ['frame', 'reticle', 'canopy', 'trunk', 'swoosh', 'type'];
+      parts.forEach(p => {
+        const el = document.getElementById(`bpart-${p}`);
+        if (!el) return;
+        if (key === 'all' || p === key) {
+          el.classList.remove('logo-dimmed');
+          if (key !== 'all') el.classList.add('logo-highlighted');
+          else el.classList.remove('logo-highlighted');
+        } else {
+          el.classList.add('logo-dimmed');
+          el.classList.remove('logo-highlighted');
+        }
+      });
+
+      ['all', 'frame', 'reticle', 'trunk', 'canopy', 'swoosh'].forEach(k => {
+        const pill = document.getElementById(`lpill-${k}`);
+        if (!pill) return;
+        if (k === key) {
+          pill.className = 'lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-sf-dark text-white';
+        } else {
+          pill.className = 'lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15';
+        }
+      });
+
+      const info = logoExplanations[key] || logoExplanations.all;
+      const box = document.getElementById('logo-element-explanation');
+      box.innerHTML = `
+        <p class="text-xs font-extrabold text-sf-dark">${info.title}</p>
+        <p class="text-[11px] text-neutral-700 mt-1 leading-relaxed">${info.desc}</p>
+      `;
+    }
+
+    function toggleBrandSwoosh() {
+      showLogoSwoosh = !showLogoSwoosh;
+      const swooshEl = document.getElementById('bpart-swoosh');
+      const camEl = document.getElementById('bpart-camera-icon');
+      const btn = document.getElementById('brand-swoosh-toggle');
+
+      if (showLogoSwoosh) {
+        swooshEl.classList.remove('hidden');
+        camEl.classList.remove('hidden');
+        btn.textContent = '+ Blue Swoosh: ON';
+      } else {
+        swooshEl.classList.add('hidden');
+        camEl.classList.add('hidden');
+        btn.textContent = 'Brand Sheet Mode';
+        inspectLogoElement('all');
+      }
+    }
+
+    function copyHex(hex) {
+      const area = document.createElement('textarea');
+      area.value = hex;
+      document.body.appendChild(area);
+      area.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Copied ${hex} to clipboard`);
+      } catch (e) {
+        showToast(`Swatch: ${hex}`);
+      }
+      document.body.removeChild(area);
+    }
+
+    /*************************************************************
+     * 10. MOBILE TOAST NOTIFICATION SYSTEM (NO ALERT/CONFIRM)
+     *************************************************************/
+    function showToast(msg) {
+      const box = document.getElementById('mobile-toast-box');
+      if (!box) return;
+      const item = document.createElement('div');
+      item.className = 'bg-sf-black/95 text-white px-3.5 py-2 rounded-2xl shadow-lg border border-sf-light/40 text-xs font-bold flex items-center gap-2 transition-all duration-300 opacity-0 -translate-y-2 backdrop-blur-md';
+      item.innerHTML = `<span class="w-2 h-2 rounded-full bg-sf-light shrink-0"></span><span>${msg}</span>`;
+      box.appendChild(item);
+
+      requestAnimationFrame(() => {
+        item.classList.remove('opacity-0', '-translate-y-2');
+      });
+
+      setTimeout(() => {
+        item.classList.add('opacity-0', '-translate-y-2');
+        setTimeout(() => item.remove(), 300);
+      }, 2400);
+    }
+
+    /*************************************************************
+     * 11. INITIALIZE MOBILE APP ON LOAD
+     *************************************************************/
+    window.onload = function () {
+      updateAllCounters();
+      renderHomeFeaturedTrees();
+      updateViewfinderPlaque(getTree(activeTreeId));
+      renderMobileTreeInventory();
+      populatePlaqueSelectDropdown();
+    };
+  </script>
+</body>
+</html>
