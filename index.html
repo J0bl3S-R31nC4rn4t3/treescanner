@@ -6,7 +6,13 @@
   <meta name="theme-color" content="#0D4829" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>ScaniFlora Mobile App — Every tree has a story.</title>
+  <title>ScaniFlora — QR-Based Botanical Discovery Platform</title>
+
+  <!-- =========================================================
+       FAVICON (Embedded SVG Data URI replicating image_419bee.png)
+       ========================================================= -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 360'%3E%3Crect width='360' height='360' rx='64' fill='%23FFFFFF'/%3E%3Cpath d='M85 90V40Q85 12 113 12H247Q275 12 275 40V90H270V54H90V90Z' fill='%231C1C1C'/%3E%3Ccircle cx='180' cy='23' r='2.8' fill='%23FFFFFF'/%3E%3Ccircle cx='143' cy='34.5' r='4.2' fill='%23FFFFFF'/%3E%3Crect x='158' y='32.3' width='44' height='4.4' rx='2.2' fill='%23FFFFFF'/%3E%3Cpath d='M85 264V320Q85 348 113 348H247Q275 348 275 320V264H270V302H90V264Z' fill='%231C1C1C'/%3E%3Ccircle cx='180' cy='325' r='14.5' fill='%23FFFFFF'/%3E%3Cpath d='M93 152V108Q93 92 109 92H154' fill='none' stroke='%231C1C1C' stroke-width='6.5'/%3E%3Cpath d='M206 265H250Q266 265 266 249V202' fill='none' stroke='%231C1C1C' stroke-width='6.5'/%3E%3Cpath d='M180 96C177 106 180 116 186 122C194 116 196 104 189 94Z' fill='%233B9862'/%3E%3Cpath d='M168 104C164 111 167 118 173 122C177 116 175 109 168 104Z' fill='%2378C090'/%3E%3Cpath d='M202 103C196 109 196 117 201 122C208 118 209 110 202 103Z' fill='%2378C090'/%3E%3Cpath d='M127 114C126 125 133 133 143 134C143 124 137 116 127 114Z' fill='%230D4829'/%3E%3Cpath d='M110 154C115 165 126 169 138 166C133 156 122 152 110 154Z' fill='%230D4829'/%3E%3Cpath d='M233 114C234 125 227 133 217 134C217 124 223 116 233 114Z' fill='%233B9862'/%3E%3Cpath d='M250 154C245 165 234 169 222 166C227 156 238 152 250 154Z' fill='%233B9862'/%3E%3Crect x='145' y='125' width='20' height='20' fill='none' stroke='%230D4829' stroke-width='3.5'/%3E%3Crect x='150.5' y='130.5' width='9' height='9' fill='%230D4829'/%3E%3Crect x='195' y='125' width='20' height='20' fill='none' stroke='%230D4829' stroke-width='3.5'/%3E%3Crect x='200.5' y='130.5' width='9' height='9' fill='%230D4829'/%3E%3Crect x='145' y='175' width='20' height='20' fill='none' stroke='%230D4829' stroke-width='3.5'/%3E%3Crect x='150.5' y='180.5' width='9' height='9' fill='%230D4829'/%3E%3Crect x='169' y='125' width='22' height='70' fill='%230D4829' opacity='0.85'/%3E%3Crect x='145' y='149' width='70' height='22' fill='%230D4829' opacity='0.85'/%3E%3Cpath d='M188 200C165 200 156 208 158 219C160 230 189 235 189 249C189 258 174 263 148 266L126 266C145 256 158 253 167 254C176 252 178 247 177 242C175 233 147 228 147 216C147 204 163 197 188 200Z' fill='%230D4829'/%3E%3Cpath d='M214 198C196 199 170 202 170 215C170 225 199 230 199 246C199 256 189 262 174 265C192 262 204 256 205 245C206 229 179 224 179 214C179 206 196 203 214 198Z' fill='%233B9862'/%3E%3C/svg%3E" />
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Fraunces, Plus Jakarta Sans, JetBrains Mono -->
@@ -24,8 +30,6 @@
               dark: '#0D4829',        // Very dark cyan - Stability, nature, longevity
               mid: '#3B9862',         // Dark moderate lime green - Active life, biodiversity
               light: '#78C090',       // Slightly desaturated cyan - New leaves, fresh growth
-              swoosh: '#0288D1',      // Orbital Blue Swoosh
-              swooshLight: '#29B6F6', // Active scan highlight
               cream: '#F4F8F5',       // Soft botanical mobile surface
               tint: '#E7F2EC'         // Light leaf pill tint
             }
@@ -46,8 +50,6 @@
       --sf-dark: #0D4829;
       --sf-mid: #3B9862;
       --sf-light: #78C090;
-      --sf-swoosh: #0288D1;
-      --sf-swoosh-light: #29B6F6;
       --sf-cream: #F4F8F5;
     }
 
@@ -163,8 +165,8 @@
       left: 7%;
       right: 7%;
       height: 3px;
-      background: linear-gradient(90deg, transparent 0%, #29B6F6 20%, #78C090 50%, #29B6F6 80%, transparent 100%);
-      box-shadow: 0 0 16px 3px rgba(41, 182, 246, 0.75), 0 0 8px 2px rgba(59, 152, 98, 0.9);
+      background: linear-gradient(90deg, transparent 0%, #3B9862 20%, #78C090 50%, #3B9862 80%, transparent 100%);
+      box-shadow: 0 0 16px 3px rgba(120, 192, 144, 0.8), 0 0 8px 2px rgba(59, 152, 98, 0.95);
       border-radius: 999px;
       animation: scanLaserMove 2.2s ease-in-out infinite;
       pointer-events: none;
@@ -207,8 +209,8 @@
       transition: all 0.3s ease;
     }
     .logo-dimmed {
-      opacity: 0.16;
-      filter: grayscale(50%);
+      opacity: 0.14;
+      filter: grayscale(60%);
     }
     .logo-highlighted {
       opacity: 1 !important;
@@ -288,92 +290,34 @@
         
         <!-- Top Status Pill -->
         <div class="flex items-center justify-between text-[11px] text-sf-light/80 font-mono pt-1">
-          <span>SCANIFLORA OS • v3.0</span>
+          <span>SCANIFLORA • BOTANICAL PLATFORM</span>
           <button onclick="dismissSplash()" class="text-xs font-bold text-white/70 hover:text-white underline">Skip</button>
         </div>
 
-        <!-- Center ScaniFlora Master Logo Lockup -->
+        <!-- Center ScaniFlora Master Logo Lockup (Pixel-Faithful SVG Replication of image_419bee.png) -->
         <div class="my-auto flex flex-col items-center text-center px-2">
-          <div class="w-44 h-52 bg-white rounded-[32px] p-3.5 shadow-2xl border-4 border-sf-light/30 flex flex-col items-center justify-center relative mb-6">
-            <!-- Custom SVG ScaniFlora Logo with Orbital Blue Swoosh -->
-            <svg viewBox="0 0 340 360" class="w-full h-full">
-              <!-- Outer Mobile Frame (#1C1C1C) -->
-              <path d="M 85 105 V 38 Q 85 12 112 12 H 228 Q 255 12 255 38 V 105 H 248 V 48 H 92 V 105 Z" fill="#1C1C1C"/>
-              <circle cx="170" cy="23" r="2.5" fill="#FFFFFF"/>
-              <circle cx="136" cy="32" r="3" fill="#FFFFFF"/>
-              <rect x="150" y="30" width="44" height="4" rx="2" fill="#FFFFFF"/>
-              <path d="M 85 255 V 310 Q 85 336 112 336 H 228 Q 255 336 255 310 V 255 H 248 V 293 H 92 V 255 Z" fill="#1C1C1C"/>
-              <circle cx="170" cy="314" r="13" fill="#FFFFFF"/>
-
-              <!-- Camera Icon & Reticle Corners -->
-              <rect x="210" y="58" width="28" height="20" rx="4" fill="#1C1C1C"/>
-              <path d="M217 58 L220 53 H228 L231 58 Z" fill="#1C1C1C"/>
-              <circle cx="224" cy="68" r="5.5" fill="none" stroke="#FFFFFF" stroke-width="2"/>
-              <path d="M 88 152 V 104 Q 88 88 104 88 H 148" fill="none" stroke="#1C1C1C" stroke-width="5.5" stroke-linecap="round"/>
-              <path d="M 252 198 V 246 Q 252 262 236 262 H 192" fill="none" stroke="#1C1C1C" stroke-width="5.5" stroke-linecap="round"/>
-
-              <!-- Leaf Canopy -->
-              <path d="M170 86 C164 96, 164 106, 170 112 C176 106, 176 96, 170 86 Z" fill="#3B9862"/>
-              <path d="M154 91 C148 98, 150 109, 158 113 C162 106, 160 96, 154 91 Z" fill="#78C090"/>
-              <path d="M186 91 C192 98, 190 109, 182 113 C178 106, 180 96, 186 91 Z" fill="#78C090"/>
-              <path d="M134 100 C128 108, 132 118, 142 120 C144 112, 141 104, 134 100 Z" fill="#0D4829"/>
-              <path d="M118 116 C116 126, 124 134, 135 132 C134 122, 128 116, 118 116 Z" fill="#3B9862"/>
-              <path d="M110 136 C110 144, 120 150, 132 146 C129 138, 120 134, 110 136 Z" fill="#78C090"/>
-              <path d="M108 156 C110 166, 122 169, 133 162 C128 154, 118 152, 108 156 Z" fill="#0D4829"/>
-              <path d="M114 178 C118 186, 130 186, 138 176 C131 170, 122 172, 114 178 Z" fill="#3B9862"/>
-              <path d="M206 100 C212 108, 208 118, 198 120 C196 112, 199 104, 206 100 Z" fill="#3B9862"/>
-              <path d="M222 116 C224 126, 216 134, 205 132 C206 122, 212 116, 222 116 Z" fill="#78C090"/>
-              <path d="M230 136 C230 144, 220 150, 208 146 C211 138, 220 134, 230 136 Z" fill="#3B9862"/>
-              <path d="M232 156 C230 166, 218 169, 207 162 C212 154, 222 152, 232 156 Z" fill="#0D4829"/>
-              <path d="M226 178 C222 186, 210 186, 202 176 C209 170, 218 172, 226 178 Z" fill="#3B9862"/>
-
-              <!-- QR Matrix -->
-              <g transform="translate(135, 117)">
-                <rect x="0" y="0" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
-                <rect x="5.5" y="5.5" width="9" height="9" fill="#0D4829"/>
-                <rect x="50" y="0" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
-                <rect x="55.5" y="5.5" width="9" height="9" fill="#0D4829"/>
-                <rect x="0" y="50" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
-                <rect x="5.5" y="55.5" width="9" height="9" fill="#0D4829"/>
-                <rect x="25" y="6" width="9" height="9" fill="#0D4829"/>
-                <rect x="38" y="8" width="6" height="11" fill="#3B9862"/>
-                <rect x="8" y="26" width="11" height="7" fill="#3B9862"/>
-                <rect x="24" y="24" width="22" height="22" fill="#0D4829"/>
-                <rect x="29" y="29" width="5" height="5" fill="#FFFFFF"/>
-                <rect x="37" y="37" width="5" height="5" fill="#FFFFFF"/>
-                <rect x="52" y="26" width="12" height="9" fill="#0D4829"/>
-                <rect x="26" y="52" width="14" height="12" fill="#3B9862"/>
-                <rect x="46" y="48" width="18" height="18" fill="#0D4829"/>
-              </g>
-
-              <!-- 'S' Trunk & Roots -->
-              <path d="M192 192 C166 192, 152 200, 154 212 C156 223, 188 226, 188 241 C188 254, 166 260, 134 262 C154 256, 173 251, 173 241 C173 230, 141 226, 141 211 C141 197, 162 190, 192 192 Z" fill="#0D4829"/>
-              <path d="M185 195 C165 196, 157 202, 158 211 C159 220, 192 224, 192 240 C192 251, 178 257, 158 260 C173 255, 182 249, 182 240 C182 229, 150 224, 150 211 C150 200, 164 195, 185 195 Z" fill="#3B9862"/>
-              <path d="M168 252 C154 256, 136 260, 122 266 C138 262, 154 260, 166 259 C186 261, 198 265, 218 266 C202 257,188 253,168 252 Z" fill="#0D4829"/>
-
-              <!-- Orbital Blue Swoosh -->
-              <path d="M196 158 C236 162, 222 208, 168 230 C126 247, 114 232, 136 214 C122 230, 136 238, 170 223 C210 205, 224 168, 196 158 Z" fill="#0288D1"/>
-            </svg>
+          <div id="splash-logo-mount" class="w-52 h-60 bg-white rounded-[34px] p-3.5 shadow-2xl border-4 border-sf-light/30 flex flex-col items-center justify-center relative mb-5">
+            <!-- Populated on load with exact image_419bee.png SVG -->
           </div>
 
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-sf-mid/30 text-sf-light border border-sf-light/30 mb-2">
+          <span class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-[11px] font-bold bg-sf-mid/30 text-sf-light border border-sf-light/30 mb-2.5">
             QR-Based Botanical Discovery Platform
           </span>
           <h1 class="text-3xl font-extrabold tracking-tight text-white">
             Scani<span class="text-sf-light">Flora</span>
           </h1>
-          <p class="text-sm font-medium text-sf-light mt-1">
+          <p class="text-sm font-medium text-sf-light mt-1.5 max-w-[290px] leading-snug">
             "Every tree has a story. We just gave it a QR code."
           </p>
-          <p class="text-xs text-white/75 mt-3 max-w-[300px] leading-relaxed">
-            Scan weatherproof QR tags on trees across parks, campuses, LGUs, and ecotourism trails to unlock instant botanical profiles.
+          <p class="text-xs text-white/75 mt-2.5 max-w-[305px] leading-relaxed">
+            Scan the QR code attached to any tree across parks, campuses, LGUs, and ecotourism sites to quickly view its common name, scientific name, characteristics, habitat, and uses.
           </p>
         </div>
 
         <!-- Bottom Launch Actions -->
         <div class="space-y-2.5">
           <button onclick="dismissSplash()" class="w-full py-3.5 px-5 rounded-2xl bg-sf-mid hover:bg-sf-light hover:text-sf-black text-white font-extrabold text-sm shadow-lg flex items-center justify-center gap-2 transition active:scale-[0.98]">
-            <span>Start Exploring</span>
+            <span>Launch ScaniFlora App</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
@@ -381,7 +325,7 @@
           </button>
 
           <button onclick="dismissSplash('scan')" class="w-full py-3 px-5 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/15 flex items-center justify-center gap-2 transition active:scale-[0.98]">
-            <svg class="w-4 h-4 text-sf-swooshLight" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-sf-light" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
               <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
               <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
               <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
@@ -402,7 +346,7 @@
         <div class="px-5 pt-1 pb-1 flex items-center justify-between text-[11px] font-medium text-white/80">
           <span id="mobile-status-clock" class="font-mono font-semibold">09:41</span>
           <div class="flex items-center gap-2">
-            <span class="px-1.5 py-0.2 rounded bg-sf-mid/40 text-[9px] font-mono text-sf-light tracking-wider">ECO-GPS</span>
+            <span class="px-1.5 py-0.2 rounded bg-sf-mid/40 text-[9px] font-mono text-sf-light tracking-wider">SCANIFLORA OS</span>
             <!-- Cellular & Battery Icons -->
             <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3C6.95 3 3.15 4.85 0 7.23L12 22 24 7.25C20.85 4.87 17.05 3 12 3z"/></svg>
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="10" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><rect x="4" y="9" width="12" height="6" rx="1" fill="currentColor"/></svg>
@@ -411,19 +355,10 @@
 
         <!-- Compact Native App Top Bar -->
         <div class="px-4 py-2.5 flex items-center justify-between border-t border-white/10">
-          <!-- Brand Mark & Current Screen Title -->
+          <!-- Brand Mark (Exact image_419bee.png Icon) & Current Screen Title -->
           <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('home')">
-            <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center p-1 shadow-sm shrink-0">
-              <svg viewBox="0 0 120 140" class="w-7 h-7">
-                <rect x="22" y="6" width="76" height="128" rx="12" fill="none" stroke="#1C1C1C" stroke-width="6"/>
-                <circle cx="60" cy="56" r="24" fill="#78C090" opacity="0.45"/>
-                <rect x="45" y="42" width="30" height="30" fill="#0D4829" rx="3"/>
-                <rect x="49" y="46" width="8" height="8" fill="#FFFFFF"/>
-                <rect x="63" y="46" width="8" height="8" fill="#FFFFFF"/>
-                <rect x="49" y="60" width="8" height="8" fill="#FFFFFF"/>
-                <path d="M46 104 C56 98, 68 98, 65 88 C62 80, 50 80, 53 72 C55 67, 63 67, 68 69" fill="none" stroke="#0D4829" stroke-width="7" stroke-linecap="round"/>
-                <path d="M36 88 C48 98, 76 80, 86 60" fill="none" stroke="#0288D1" stroke-width="5" stroke-linecap="round"/>
-              </svg>
+            <div id="header-logo-mount" class="w-9 h-9 rounded-xl bg-white flex items-center justify-center p-0.5 shadow-sm shrink-0">
+              <!-- Populated on load with exact image_419bee.png SVG -->
             </div>
             <div>
               <div class="flex items-center gap-1.5">
@@ -438,7 +373,7 @@
           <div class="flex items-center gap-1.5">
             <button onclick="switchTab('trees')" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 flex items-center gap-1.5 text-xs font-bold transition" title="Scanned Trees Count">
               <span class="w-2 h-2 rounded-full bg-sf-light"></span>
-              <span id="header-scanned-count" class="font-mono text-[11px]">3/8</span>
+              <span id="header-scanned-count" class="font-mono text-[11px]">5/39</span>
             </button>
 
             <button onclick="switchTab('qrtag')" class="p-2 rounded-xl bg-sf-mid hover:bg-sf-light hover:text-sf-black text-white transition shadow-sm" title="QR Tag Generator">
@@ -459,13 +394,12 @@
       <main id="app-scroll-viewport" class="flex-1 overflow-y-auto mobile-scroll relative bg-sf-cream">
 
         <!-- =====================================================
-             TAB 1: HOME SCREEN (Dashboard, Scan CTA, 4-Step Carousel, Featured, Problems)
+             TAB 1: HOME SCREEN (Dashboard, Global Catalog Stats, 4-Step Carousel, Featured)
              ===================================================== -->
         <section id="tab-screen-home" class="tab-screen p-4 space-y-5 pb-8">
 
           <!-- Hero Quick Scan Card -->
           <div class="bg-gradient-to-br from-sf-dark via-[#115833] to-sf-black text-white rounded-3xl p-5 shadow-md relative overflow-hidden">
-            <!-- Decorative Concentric Arch Lines from Proposal PDF -->
             <svg class="absolute -right-6 -bottom-6 w-36 h-36 text-sf-light/15 pointer-events-none" viewBox="0 0 120 120" fill="none">
               <circle cx="60" cy="60" r="52" stroke="currentColor" stroke-width="3"/>
               <circle cx="60" cy="60" r="38" stroke="currentColor" stroke-width="3"/>
@@ -474,13 +408,13 @@
 
             <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-white/15 text-sf-light mb-2">
               <span class="w-1.5 h-1.5 rounded-full bg-sf-light animate-ping"></span>
-              Ecotourism &amp; Campus Trail Ready
+              QR-Based Botanical Discovery Platform
             </span>
             <h2 class="text-xl font-serif font-bold leading-snug">
-              Discover the hidden story of every tree around you.
+              "Every tree has a story. We just gave it a QR code."
             </h2>
             <p class="text-xs text-white/80 mt-1.5 leading-relaxed">
-              Point your phone at any ScaniFlora QR plaque to view its common name, scientific name, habitat, uses, and ecological importance.
+              Scan the QR code attached to any tree to quickly view its common name, scientific name, family, characteristics, habitat, conservation status, and uses.
             </p>
 
             <div class="mt-4 flex items-center gap-2.5">
@@ -504,16 +438,53 @@
           <!-- Quick Telemetry Metrics Row -->
           <div class="grid grid-cols-3 gap-2.5">
             <div onclick="switchTab('trees')" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm text-center cursor-pointer active:scale-95 transition">
-              <p id="home-stat-total" class="text-lg font-extrabold text-sf-dark">8</p>
-              <p class="text-[10px] font-bold uppercase text-neutral-500">Tagged Trees</p>
+              <p id="home-stat-total" class="text-lg font-extrabold text-sf-dark">39</p>
+              <p class="text-[10px] font-bold uppercase text-neutral-500">Species</p>
+            </div>
+            <div onclick="switchTab('trees'); setOriginFilter('native');" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm text-center cursor-pointer active:scale-95 transition">
+              <p class="text-lg font-extrabold text-sf-mid">17</p>
+              <p class="text-[10px] font-bold uppercase text-neutral-500">Families</p>
             </div>
             <div onclick="switchTab('scan')" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm text-center cursor-pointer active:scale-95 transition">
-              <p id="home-stat-scanned" class="text-lg font-extrabold text-sf-mid">3</p>
+              <p id="home-stat-scanned" class="text-lg font-extrabold text-sf-black">5</p>
               <p class="text-[10px] font-bold uppercase text-neutral-500">Scanned</p>
             </div>
-            <div onclick="switchTab('qrtag')" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm text-center cursor-pointer active:scale-95 transition">
-              <p class="text-lg font-extrabold text-sf-swoosh">QR v2</p>
-              <p class="text-[10px] font-bold uppercase text-neutral-500">Tag Studio</p>
+          </div>
+
+          <!-- Global Botanical Catalog & Conservation Overview -->
+          <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-mid">Botanical Database</span>
+                <h3 class="text-sm font-serif font-bold text-sf-dark">Global Botanical &amp; Conservation Overview</h3>
+              </div>
+              <button onclick="switchTab('trees')" class="text-[11px] font-bold text-sf-dark bg-sf-tint px-2.5 py-1 rounded-lg">
+                Explore All &rarr;
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5 text-[11px]">
+              <!-- IUCN Column -->
+              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 space-y-1.5">
+                <p class="font-extrabold text-sf-dark uppercase tracking-wider text-[10px] border-b border-sf-dark/10 pb-1">IUCN Red List</p>
+                <div class="flex justify-between"><span>Critically Endangered</span><span class="font-mono font-bold text-red-700">1</span></div>
+                <div class="flex justify-between"><span>Endangered</span><span class="font-mono font-bold text-orange-700">3</span></div>
+                <div class="flex justify-between"><span>Vulnerable</span><span class="font-mono font-bold text-amber-700">4</span></div>
+                <div class="flex justify-between"><span>Near Threatened</span><span class="font-mono font-bold text-teal-800">5</span></div>
+                <div class="flex justify-between"><span>Least Concern</span><span class="font-mono font-bold text-sf-mid">20</span></div>
+                <div class="flex justify-between"><span>Data Deficient / NE</span><span class="font-mono font-bold text-neutral-500">6</span></div>
+              </div>
+
+              <!-- DAO 2026-20 Column -->
+              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 space-y-1.5">
+                <p class="font-extrabold text-sf-dark uppercase tracking-wider text-[10px] border-b border-sf-dark/10 pb-1">Conservation Status</p>
+                <div class="flex justify-between"><span>Critically Endangered</span><span class="font-mono font-bold text-red-700">1</span></div>
+                <div class="flex justify-between"><span>Endangered</span><span class="font-mono font-bold text-orange-700">1</span></div>
+                <div class="flex justify-between"><span>Vulnerable</span><span class="font-mono font-bold text-amber-700">8</span></div>
+                <div class="flex justify-between"><span>Other Threatened</span><span class="font-mono font-bold text-teal-800">3</span></div>
+                <div class="flex justify-between"><span>Other Wildlife Species</span><span class="font-mono font-bold text-sf-mid">26</span></div>
+                <div class="flex justify-between"><span>Total Species</span><span class="font-mono font-bold text-sf-dark">39</span></div>
+              </div>
             </div>
           </div>
 
@@ -525,7 +496,6 @@
             </div>
 
             <div class="flex gap-3 overflow-x-auto snap-x-mandatory pb-1">
-              <!-- Step 01 -->
               <div onclick="switchTab('qrtag')" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
                 <div class="flex items-center justify-between mb-1.5">
                   <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-dark text-white">STEP 01</span>
@@ -533,15 +503,14 @@
                 </div>
                 <p class="text-xs font-extrabold text-sf-black">Identify the Tree</p>
                 <p class="text-[11px] text-neutral-600 mt-1 leading-relaxed">
-                  Locate a tree that has a unique weather-resistant ScaniFlora QR code tag attached to it.
+                  Locate a tree in any park, campus, or ecotourism site that has a unique ScaniFlora QR code tag attached to it.
                 </p>
               </div>
 
-              <!-- Step 02 -->
               <div onclick="switchTab('scan')" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
                 <div class="flex items-center justify-between mb-1.5">
-                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-swoosh text-white">STEP 02</span>
-                  <span class="text-[10px] font-bold text-sf-swoosh">Camera Reticle</span>
+                  <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-black text-sf-light">STEP 02</span>
+                  <span class="text-[10px] font-bold text-sf-dark">Camera Reticle</span>
                 </div>
                 <p class="text-xs font-extrabold text-sf-black">Scan the QR Code</p>
                 <p class="text-[11px] text-neutral-600 mt-1 leading-relaxed">
@@ -549,7 +518,6 @@
                 </p>
               </div>
 
-              <!-- Step 03 -->
               <div onclick="openTreeProfileSheet(activeTreeId)" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
                 <div class="flex items-center justify-between mb-1.5">
                   <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-mid text-white">STEP 03</span>
@@ -557,19 +525,18 @@
                 </div>
                 <p class="text-xs font-extrabold text-sf-black">Access Information</p>
                 <p class="text-[11px] text-neutral-600 mt-1 leading-relaxed">
-                  View Common Name, Scientific Name, Family Name, and full botanical description.
+                  Open the ScaniFlora app to view detailed botanical and conservation information about the tree.
                 </p>
               </div>
 
-              <!-- Step 04 -->
-              <div onclick="openTreeProfileSheet('SF-003')" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
+              <div onclick="openTreeProfileSheet('SF-32')" class="snap-center-child shrink-0 w-56 bg-white p-3.5 rounded-2xl border border-sf-dark/10 shadow-sm cursor-pointer active:scale-95 transition">
                 <div class="flex items-center justify-between mb-1.5">
                   <span class="font-mono text-[11px] font-bold px-2 py-0.5 rounded-md bg-sf-dark text-sf-light">STEP 04</span>
                   <span class="text-[10px] font-bold text-sf-mid">Conservation</span>
                 </div>
                 <p class="text-xs font-extrabold text-sf-black">Learn &amp; Appreciate</p>
                 <p class="text-[11px] text-neutral-600 mt-1 leading-relaxed">
-                  Explore the tree's ecological significance, uses, and interesting facts.
+                  Explore the tree's significance, uses, and interesting facts provided in the app.
                 </p>
               </div>
             </div>
@@ -578,43 +545,11 @@
           <!-- Featured Tagged Trees Section -->
           <div>
             <div class="flex items-center justify-between mb-2.5 px-0.5">
-              <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">Nearby QR-Tagged Trees</h3>
-              <button onclick="switchTab('trees')" class="text-xs font-bold text-sf-mid hover:underline">See All (8)</button>
+              <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">Featured Botanical Species</h3>
+              <button onclick="switchTab('trees')" class="text-xs font-bold text-sf-mid hover:underline">See All (39)</button>
             </div>
             <div id="home-featured-trees" class="space-y-2.5">
               <!-- Populated via JS -->
-            </div>
-          </div>
-
-          <!-- Why ScaniFlora Matters (4 Problem & Conservation Impact Cards from Proposal Page 2) -->
-          <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3">
-            <div class="flex items-center justify-between">
-              <div>
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-mid">Mission &amp; Impact</span>
-                <h3 class="text-sm font-serif font-bold text-sf-black">Why ScaniFlora Matters</h3>
-              </div>
-              <button onclick="switchTab('brand')" class="text-[11px] font-bold text-sf-dark bg-sf-tint px-2.5 py-1 rounded-lg">
-                About Us &rarr;
-              </button>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2.5">
-              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/5">
-                <p class="text-xs font-extrabold text-sf-dark">Public Awareness</p>
-                <p class="text-[11px] text-neutral-600 mt-0.5 leading-snug">Helps non-forestry individuals identify trees and their ecological role.</p>
-              </div>
-              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/5">
-                <p class="text-xs font-extrabold text-sf-dark">Field Accessibility</p>
-                <p class="text-[11px] text-neutral-600 mt-0.5 leading-snug">Delivers instant on-site tree data via durable QR tags on trails.</p>
-              </div>
-              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/5">
-                <p class="text-xs font-extrabold text-sf-dark">Easy Tree Inventory</p>
-                <p class="text-[11px] text-neutral-600 mt-0.5 leading-snug">Empowers schools, LGUs, and parks to organize tree records.</p>
-              </div>
-              <div class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/5">
-                <p class="text-xs font-extrabold text-sf-dark">Tree Conservation</p>
-                <p class="text-[11px] text-neutral-600 mt-0.5 leading-snug">Turns curiosity into appreciation and active protection of native flora.</p>
-              </div>
             </div>
           </div>
 
@@ -628,7 +563,7 @@
           <!-- Scanner Top Controls Bar -->
           <div class="px-4 py-3 flex items-center justify-between bg-black/50 backdrop-blur-md border-b border-white/10 z-10">
             <div>
-              <h2 class="text-xs font-extrabold uppercase tracking-wider text-sf-light">Optical Tree QR Scanner</h2>
+              <h2 class="text-xs font-extrabold uppercase tracking-wider text-sf-light">ScaniFlora QR Scanner</h2>
               <p id="scan-status-subtext" class="text-[11px] text-white/70">Center tree QR plaque inside reticle</p>
             </div>
 
@@ -642,7 +577,7 @@
               </button>
 
               <!-- Live Rear Camera Toggle -->
-              <button onclick="toggleRearCamera()" id="rear-cam-btn" class="px-3 py-1.5 rounded-xl bg-sf-swoosh/30 hover:bg-sf-swoosh/50 text-sf-swooshLight border border-sf-swooshLight/40 text-[11px] font-bold flex items-center gap-1.5 transition">
+              <button onclick="toggleRearCamera()" id="rear-cam-btn" class="px-3 py-1.5 rounded-xl bg-sf-mid/30 hover:bg-sf-mid/50 text-sf-light border border-sf-light/40 text-[11px] font-bold flex items-center gap-1.5 transition">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
                   <circle cx="12" cy="13" r="4"></circle>
@@ -673,65 +608,64 @@
               </svg>
             </div>
 
-            <!-- Signature ScaniFlora Reticle Frame -->
+            <!-- Signature ScaniFlora Reticle Frame (Top-Left & Bottom-Right emphasized) -->
             <div id="scanner-reticle-frame" class="relative w-60 h-60 flex items-center justify-center reticle-pulse z-10">
-              <!-- 4 Corner Reticles -->
-              <div class="absolute top-0 left-0 w-12 h-12 border-t-[5px] border-l-[5px] border-sf-light rounded-tl-2xl"></div>
-              <div class="absolute top-0 right-0 w-12 h-12 border-t-[5px] border-r-[5px] border-sf-light rounded-tr-2xl"></div>
-              <div class="absolute bottom-0 left-0 w-12 h-12 border-b-[5px] border-l-[5px] border-sf-light rounded-bl-2xl"></div>
-              <div class="absolute bottom-0 right-0 w-12 h-12 border-b-[5px] border-r-[5px] border-sf-light rounded-br-2xl"></div>
+              <div class="absolute top-0 left-0 w-14 h-14 border-t-[6px] border-l-[6px] border-sf-light rounded-tl-2xl"></div>
+              <div class="absolute top-0 right-0 w-10 h-10 border-t-[3px] border-r-[3px] border-white/30 rounded-tr-2xl"></div>
+              <div class="absolute bottom-0 left-0 w-10 h-10 border-b-[3px] border-l-[3px] border-white/30 rounded-bl-2xl"></div>
+              <div class="absolute bottom-0 right-0 w-14 h-14 border-b-[6px] border-r-[6px] border-sf-light rounded-br-2xl"></div>
 
-              <!-- Animated Laser Beam -->
+              <!-- Animated Green Laser Beam -->
               <div class="scan-laser"></div>
 
               <!-- Target Tree QR Plaque Inside Viewfinder -->
               <div id="viewfinder-plaque-card" onclick="executeSimulatedScan(activeTreeId)" class="w-44 h-44 rounded-2xl bg-white/95 p-3 shadow-2xl flex flex-col items-center justify-center text-sf-black cursor-pointer transition-all duration-300 active:scale-95">
                 <div id="viewfinder-qr-svg" class="w-28 h-28 flex items-center justify-center"></div>
-                <p id="viewfinder-tree-name" class="text-xs font-extrabold text-sf-dark mt-1 uppercase tracking-wider truncate max-w-full">Narra</p>
+                <p id="viewfinder-tree-name" class="text-xs font-extrabold text-sf-dark mt-1 uppercase tracking-wider truncate max-w-full">Almaciga</p>
                 <p id="viewfinder-tree-id" class="text-[10px] font-mono text-neutral-500">Tap Plaque to Decode</p>
               </div>
             </div>
 
             <!-- Live Decoding Progress Bar -->
             <div id="scan-decode-bar-wrap" class="w-60 mt-4 hidden z-10">
-              <div class="flex justify-between text-[10px] font-mono text-sf-swooshLight mb-1">
+              <div class="flex justify-between text-[10px] font-mono text-sf-light mb-1">
                 <span id="scan-decode-status">READING BOTANICAL QR...</span>
                 <span>100%</span>
               </div>
               <div class="w-full h-1.5 bg-white/15 rounded-full overflow-hidden">
-                <div id="scan-decode-fill" class="h-full bg-gradient-to-r from-sf-mid via-sf-light to-sf-swooshLight w-0 transition-all duration-500"></div>
+                <div id="scan-decode-fill" class="h-full bg-gradient-to-r from-sf-dark via-sf-mid to-sf-light w-0 transition-all duration-500"></div>
               </div>
             </div>
 
           </div>
 
-          <!-- One-Tap "Simulate Nearby Tree QR Tag Scan" Thumb Strip -->
+          <!-- One-Tap "Simulate Botanical Tree QR Tag Scan" Thumb Strip (All 39 Species) -->
           <div class="bg-neutral-900/95 border-t border-white/10 p-4 z-10">
             <div class="flex items-center justify-between mb-2">
               <span class="text-[11px] font-extrabold uppercase tracking-wider text-sf-light">
-                Simulate Nearby Tree QR Tag Scan:
+                Simulate Botanical QR Scan (39 Species):
               </span>
-              <span class="text-[10px] font-mono text-white/60">1-Tap Decode</span>
+              <span class="text-[10px] font-mono text-white/60">Swipe &amp; Tap</span>
             </div>
 
             <div id="scanner-thumb-strip" class="flex gap-2 overflow-x-auto snap-x-mandatory pb-1">
-              <!-- Populated via JS with all 8 trees -->
+              <!-- Populated via JS with all 39 trees -->
             </div>
           </div>
 
         </section>
 
         <!-- =====================================================
-             TAB 3: TREES SCREEN (Searchable & Filterable Mobile Inventory)
+             TAB 3: TREES SCREEN (All 39 Botanical Species Search & Filter)
              ===================================================== -->
         <section id="tab-screen-trees" class="tab-screen hidden p-4 space-y-4 pb-8">
 
-          <!-- Sticky Search & Family Filter Header -->
+          <!-- Sticky Search, Origin Filter & Family Filter Header -->
           <div class="bg-white rounded-2xl p-3.5 border border-sf-dark/10 shadow-sm space-y-3">
             <div class="flex items-center justify-between">
               <div>
-                <h2 class="text-sm font-extrabold text-sf-dark">Tree Inventory Catalog</h2>
-                <p class="text-[11px] text-neutral-500">Tap any tree to open its full story &amp; QR profile</p>
+                <h2 class="text-sm font-extrabold text-sf-dark">Global Botanical Species Catalog</h2>
+                <p id="trees-results-subtitle" class="text-[11px] text-neutral-500">Showing all 39 documented species</p>
               </div>
               <button onclick="switchTab('qrtag'); openQrStudioMode('add');" class="px-2.5 py-1.5 rounded-xl bg-sf-dark text-white text-[11px] font-bold hover:bg-sf-mid transition">
                 + Add Tree
@@ -744,13 +678,20 @@
                 type="text"
                 id="trees-search-input"
                 oninput="renderMobileTreeInventory()"
-                placeholder="Search common name, scientific name, family, ID..."
+                placeholder="Search common name, scientific name, family, use..."
                 class="w-full pl-9 pr-8 py-2.5 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"
               />
               <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
+            </div>
+
+            <!-- Geographical Status Filter Pills (All / Native / Non-native) -->
+            <div class="flex gap-1.5">
+              <button onclick="setOriginFilter('ALL')" id="origin-pill-ALL" class="px-3 py-1 rounded-lg text-[11px] font-bold bg-sf-black text-white transition">All (39)</button>
+              <button onclick="setOriginFilter('native')" id="origin-pill-native" class="px-3 py-1 rounded-lg text-[11px] font-bold bg-sf-cream text-sf-dark border border-sf-dark/15 transition">Native (33)</button>
+              <button onclick="setOriginFilter('non-native')" id="origin-pill-non-native" class="px-3 py-1 rounded-lg text-[11px] font-bold bg-sf-cream text-sf-dark border border-sf-dark/15 transition">Non-native (6)</button>
             </div>
 
             <!-- Horizontal Family Filter Pills -->
@@ -771,7 +712,7 @@
              ===================================================== -->
         <section id="tab-screen-qrtag" class="tab-screen hidden p-4 space-y-4 pb-8">
 
-          <!-- Mode Switcher: Preview Existing Tree QR Tag vs Register New Tree -->
+          <!-- Mode Switcher -->
           <div class="bg-white rounded-2xl p-1.5 border border-sf-dark/10 shadow-sm grid grid-cols-2 gap-1">
             <button id="qr-mode-btn-preview" onclick="openQrStudioMode('preview')" class="py-2 rounded-xl text-xs font-extrabold bg-sf-dark text-white transition">
               Inspect Tree QR Plaque
@@ -784,10 +725,10 @@
           <!-- SUB-VIEW A: INSPECT & PRINT WEATHERPROOF QR PLAQUE -->
           <div id="qr-studio-preview-pane" class="space-y-4">
             
-            <!-- Tree Selector Dropdown -->
+            <!-- Tree Selector Dropdown (All 39 Botanical Species) -->
             <div class="bg-white rounded-2xl p-4 border border-sf-dark/10 shadow-sm">
               <label class="block text-[11px] font-extrabold uppercase tracking-wider text-sf-dark mb-1.5">
-                Select Tree from Inventory:
+                Select Botanical Species (SF-01 to SF-39):
               </label>
               <select id="qr-plaque-tree-select" onchange="handlePlaqueTreeSelect(this.value)" class="w-full px-3 py-2.5 rounded-xl bg-sf-cream border border-sf-dark/20 text-xs font-bold text-sf-black focus:outline-none focus:border-sf-mid">
                 <!-- Populated via JS -->
@@ -805,7 +746,7 @@
 
                 <div class="text-center border-b border-white/15 pb-2.5 mb-3.5">
                   <p class="text-base font-extrabold tracking-tight text-sf-light">Scani<span class="text-white">Flora</span></p>
-                  <p class="text-[10px] text-white/65">Every tree has a story. We just gave it a QR code.</p>
+                  <p class="text-[10px] text-white/65">Every tree has a story. • Verified QR Tag</p>
                 </div>
 
                 <!-- High-Contrast White QR Matrix Holder -->
@@ -815,14 +756,14 @@
 
                 <!-- Tree Identification Metadata -->
                 <div class="text-center mt-3.5 space-y-0.5">
-                  <p id="plaque-common-name" class="text-lg font-serif font-bold text-white truncate">Narra</p>
-                  <p id="plaque-sci-name" class="text-xs italic text-sf-light truncate">Pterocarpus indicus</p>
-                  <p id="plaque-family-name" class="text-[11px] font-semibold text-white/75">Family: Fabaceae</p>
+                  <p id="plaque-common-name" class="text-lg font-serif font-bold text-white truncate">Almaciga</p>
+                  <p id="plaque-sci-name" class="text-xs italic text-sf-light truncate">Agathis dammara</p>
+                  <p id="plaque-family-name" class="text-[11px] font-semibold text-white/75">Family: Araucariaceae</p>
                 </div>
 
                 <div class="mt-3.5 pt-2.5 border-t border-white/15 flex items-center justify-between text-[10px] font-mono text-sf-light">
-                  <span id="plaque-tag-id">TAG: SF-001</span>
-                  <span>SCAN WITH SCANIFLORA</span>
+                  <span id="plaque-tag-id">TAG: SF-01</span>
+                  <span id="plaque-origin-badge" class="uppercase">NATIVE</span>
                 </div>
               </div>
 
@@ -855,8 +796,8 @@
           <form id="qr-studio-add-pane" onsubmit="handleSaveNewTree(event)" class="hidden bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3.5">
             <div class="flex items-center justify-between border-b border-neutral-100 pb-2.5">
               <div>
-                <h3 class="text-sm font-extrabold text-sf-dark">Add Tree to ScaniFlora</h3>
-                <p class="text-[11px] text-neutral-500">For Schools, LGUs, Parks &amp; Ecotourism Sites</p>
+                <h3 class="text-sm font-extrabold text-sf-dark">Register New Tree on ScaniFlora</h3>
+                <p class="text-[11px] text-neutral-500">Generates a universal ScaniFlora QR Tag (SF-40+)</p>
               </div>
               <button type="button" onclick="autoFillYlangYlang()" class="text-[11px] font-bold text-sf-mid bg-sf-tint px-2.5 py-1 rounded-lg">
                 Auto-Fill Demo
@@ -866,7 +807,7 @@
             <div class="grid grid-cols-2 gap-2.5">
               <div>
                 <label class="block text-[11px] font-bold text-sf-black mb-1">Common Name *</label>
-                <input type="text" id="new-tree-common" required placeholder="e.g., Ylang-Ylang" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
+                <input type="text" id="new-tree-common" required placeholder="e.g., Ilang-Ilang" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
               </div>
               <div>
                 <label class="block text-[11px] font-bold text-sf-black mb-1">Scientific Name *</label>
@@ -880,154 +821,177 @@
                 <input type="text" id="new-tree-family" required placeholder="e.g., Annonaceae" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
               </div>
               <div>
-                <label class="block text-[11px] font-bold text-sf-black mb-1">Habitat / Trail Zone *</label>
-                <input type="text" id="new-tree-habitat" required placeholder="e.g., Eco-Park Sector B" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
+                <label class="block text-[11px] font-bold text-sf-black mb-1">Primary Use/s *</label>
+                <input type="text" id="new-tree-uses" required placeholder="e.g., essential oil, timber" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-bold text-sf-black mb-1">Typical Height *</label>
+                <input type="text" id="new-tree-height" required placeholder="e.g., Up to 15-25 meters tall" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-sf-black mb-1">Habitat *</label>
+                <input type="text" id="new-tree-habitat" required placeholder="e.g., Lowland rainforest" class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"/>
               </div>
             </div>
 
             <div>
-              <label class="block text-[11px] font-bold text-sf-black mb-1">Tree Description &amp; Characteristics *</label>
-              <textarea id="new-tree-desc" rows="2" required placeholder="Describe leaves, bark, crown structure, and native habitat..." class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"></textarea>
+              <label class="block text-[11px] font-bold text-sf-black mb-1">Tree Description *</label>
+              <textarea id="new-tree-desc" rows="2" required placeholder="Botanical characteristics..." class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"></textarea>
             </div>
 
             <div>
-              <label class="block text-[11px] font-bold text-sf-black mb-1">Uses and Benefits *</label>
-              <textarea id="new-tree-uses" rows="2" required placeholder="Ecological importance, shade, medicinal or timber uses..." class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"></textarea>
-            </div>
-
-            <div>
-              <label class="block text-[11px] font-bold text-sf-black mb-1">Interesting Facts *</label>
-              <textarea id="new-tree-facts" rows="2" required placeholder="Unique story or trivia about this tree..." class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"></textarea>
+              <label class="block text-[11px] font-bold text-sf-black mb-1">Interesting Fact *</label>
+              <textarea id="new-tree-facts" rows="2" required placeholder="Unique story or trivia..." class="w-full px-3 py-2 rounded-xl bg-sf-cream border border-sf-dark/15 text-xs focus:outline-none focus:border-sf-mid"></textarea>
             </div>
 
             <button type="submit" class="w-full py-3 px-4 rounded-2xl bg-sf-dark hover:bg-sf-mid text-white font-extrabold text-xs shadow-md transition active:scale-95">
-              Generate QR Tag &amp; Save Tree Profile
+              Generate QR Tag &amp; Save Species
             </button>
           </form>
 
         </section>
 
         <!-- =====================================================
-             TAB 5: BRAND & TEAM SHOWCASE SCREEN
-             (Interactive Logo Breakdown, Color Palette Swatches & 5 Executive Officers)
+             TAB 5: BRAND, EXACT LOGO REPLICA & FAVICON CODE SCREEN
+             (Pixel-faithful replica of image_419bee.png)
              ===================================================== -->
         <section id="tab-screen-brand" class="tab-screen hidden p-4 space-y-5 pb-8">
 
-          <!-- Interactive Master Logo Breakdown Card -->
+          <!-- Interactive Master Logo Breakdown Card (Exact image_419bee.png Replica) -->
           <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-4">
             <div class="flex items-center justify-between">
               <div>
-                <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-mid">Interactive Brand Identity</span>
-                <h2 class="text-base font-serif font-bold text-sf-dark">Logo Breakdown &amp; Meaning</h2>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-mid">Official Brand Identity Sheet</span>
+                <h2 class="text-base font-serif font-bold text-sf-dark">Logo Breakdown &amp; Elements Meaning</h2>
               </div>
-              <button onclick="toggleBrandSwoosh()" id="brand-swoosh-toggle" class="px-2.5 py-1 rounded-lg bg-sf-swoosh/15 text-sf-swoosh font-bold text-[11px] border border-sf-swoosh/30">
-                + Blue Swoosh: ON
+              <button onclick="copyMasterLogoSVG()" class="px-2.5 py-1 rounded-xl bg-sf-tint text-sf-dark text-[10px] font-extrabold hover:bg-sf-light/40 transition">
+                Copy SVG
               </button>
             </div>
 
-            <!-- Interactive SVG Logo Canvas -->
-            <div class="bg-sf-cream rounded-2xl p-4 flex flex-col items-center border border-sf-dark/10">
-              <svg id="brand-interactive-logo" viewBox="0 0 340 420" class="w-48 h-auto">
-                <!-- 1. Outer Mobile Frame -->
-                <g id="bpart-frame" class="logo-part cursor-pointer" onclick="inspectLogoElement('frame')">
-                  <path d="M 85 110 V 42 Q 85 16 112 16 H 228 Q 255 16 255 42 V 110 H 248 V 52 H 92 V 110 Z" fill="#1C1C1C"/>
-                  <circle cx="170" cy="27" r="2.5" fill="#FFFFFF"/>
-                  <circle cx="136" cy="36" r="3" fill="#FFFFFF"/>
-                  <rect x="150" y="34" width="44" height="4" rx="2" fill="#FFFFFF"/>
-                  <path d="M 85 260 V 315 Q 85 342 112 342 H 228 Q 255 342 255 315 V 260 H 248 V 298 H 92 V 260 Z" fill="#1C1C1C"/>
-                  <circle cx="170" cy="320" r="14" fill="#FFFFFF"/>
-                </g>
+            <!-- Interactive Master SVG Logo Canvas (Exact replica of image_419bee.png) -->
+            <div class="bg-white rounded-2xl p-4 flex flex-col items-center border border-sf-dark/15 shadow-inner">
+              <div id="brand-logo-mount" class="w-52 h-auto flex items-center justify-center">
+                <!-- Populated on load with interactive image_419bee.png SVG -->
+              </div>
 
-                <!-- 2. Reticle Corners & Camera Icon -->
-                <g id="bpart-reticle" class="logo-part cursor-pointer" onclick="inspectLogoElement('reticle')">
-                  <path d="M 88 158 V 110 Q 88 94 104 94 H 148" fill="none" stroke="#1C1C1C" stroke-width="5.5" stroke-linecap="round"/>
-                  <path d="M 252 204 V 252 Q 252 268 236 268 H 192" fill="none" stroke="#1C1C1C" stroke-width="5.5" stroke-linecap="round"/>
-                  <g id="bpart-camera-icon">
-                    <rect x="210" y="64" width="30" height="22" rx="4" fill="#1C1C1C"/>
-                    <path d="M218 64 L221 59 H229 L232 64 Z" fill="#1C1C1C"/>
-                    <circle cx="225" cy="75" r="6" fill="none" stroke="#FFFFFF" stroke-width="2.2"/>
-                  </g>
-                </g>
-
-                <!-- 3. Leaf Canopy & QR Code -->
-                <g id="bpart-canopy" class="logo-part cursor-pointer" onclick="inspectLogoElement('canopy')">
-                  <path d="M170 92 C164 102, 164 112, 170 118 C176 112, 176 102, 170 92 Z" fill="#3B9862"/>
-                  <path d="M154 97 C148 104, 150 115, 158 119 C162 112, 160 102, 154 97 Z" fill="#78C090"/>
-                  <path d="M186 97 C192 104, 190 115, 182 119 C178 112, 180 102, 186 97 Z" fill="#78C090"/>
-                  <path d="M134 106 C128 114, 132 124, 142 126 C144 118, 141 110, 134 106 Z" fill="#0D4829"/>
-                  <path d="M118 122 C116 132, 124 140, 135 138 C134 128, 128 122, 118 122 Z" fill="#3B9862"/>
-                  <path d="M110 142 C110 150, 120 156, 132 152 C129 144, 120 140, 110 142 Z" fill="#78C090"/>
-                  <path d="M108 162 C110 172, 122 175, 133 168 C128 160, 118 158, 108 162 Z" fill="#0D4829"/>
-                  <path d="M114 184 C118 192, 130 192, 138 182 C131 176, 122 178, 114 184 Z" fill="#3B9862"/>
-                  <path d="M124 202 C130 208, 141 205, 146 195 C138 191, 130 195, 124 202 Z" fill="#0D4829"/>
-                  <path d="M206 106 C212 114, 208 124, 198 126 C196 118, 199 110, 206 106 Z" fill="#3B9862"/>
-                  <path d="M222 122 C224 132, 216 140, 205 138 C206 128, 212 122, 222 122 Z" fill="#78C090"/>
-                  <path d="M230 142 C230 150, 220 156, 208 152 C211 144, 220 140, 230 142 Z" fill="#3B9862"/>
-                  <path d="M232 162 C230 172, 218 175, 207 168 C212 160, 222 158, 232 162 Z" fill="#0D4829"/>
-                  <path d="M226 184 C222 192, 210 192, 202 182 C209 176, 218 178, 226 184 Z" fill="#3B9862"/>
-                  <path d="M216 202 C210 208, 199 205, 194 195 C202 191, 210 195, 216 202 Z" fill="#78C090"/>
-
-                  <g transform="translate(135, 123)">
-                    <rect x="0" y="0" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
-                    <rect x="5.5" y="5.5" width="9" height="9" fill="#0D4829"/>
-                    <rect x="50" y="0" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
-                    <rect x="55.5" y="5.5" width="9" height="9" fill="#0D4829"/>
-                    <rect x="0" y="50" width="20" height="20" fill="none" stroke="#0D4829" stroke-width="3.2"/>
-                    <rect x="5.5" y="55.5" width="9" height="9" fill="#0D4829"/>
-                    <rect x="24" y="24" width="22" height="22" fill="#0D4829"/>
-                    <rect x="29" y="29" width="5" height="5" fill="#FFFFFF"/>
-                    <rect x="37" y="37" width="5" height="5" fill="#FFFFFF"/>
-                    <rect x="52" y="26" width="12" height="9" fill="#3B9862"/>
-                    <rect x="26" y="52" width="14" height="12" fill="#3B9862"/>
-                    <rect x="46" y="48" width="18" height="18" fill="#0D4829"/>
-                  </g>
-                </g>
-
-                <!-- 4. 'S' Trunk & Roots -->
-                <g id="bpart-trunk" class="logo-part cursor-pointer" onclick="inspectLogoElement('trunk')">
-                  <path d="M142 197 Q156 205 166 205 Q180 205 198 196 C185 207, 174 210, 165 212 Z" fill="#0D4829"/>
-                  <path d="M192 198 C166 198, 152 206, 154 218 C156 229, 188 232, 188 247 C188 260, 166 266, 134 268 C154 262, 173 257, 173 247 C173 236, 141 232, 141 217 C141 203, 162 196, 192 198 Z" fill="#0D4829"/>
-                  <path d="M185 201 C165 202, 157 208, 158 217 C159 226, 192 230, 192 246 C192 257, 178 263, 158 266 C173 261, 182 255, 182 246 C182 235, 150 230, 150 217 C150 206, 164 201, 185 201 Z" fill="#3B9862"/>
-                  <path d="M168 258 C154 262, 136 266, 122 272 C138 268, 154 266, 166 265 C186 267, 198 271, 218 272 C202 263, 188 259, 168 258 Z" fill="#0D4829"/>
-                </g>
-
-                <!-- 5. Orbital Blue Swoosh -->
-                <g id="bpart-swoosh" class="logo-part cursor-pointer" onclick="inspectLogoElement('swoosh')">
-                  <path d="M196 164 C236 168, 222 214, 168 236 C126 253, 114 238, 136 220 C122 236, 136 244, 170 229 C210 211, 224 174, 196 164 Z" fill="#0288D1"/>
-                  <path d="M202 170 C228 178, 212 214, 166 233 C136 245, 124 238, 134 226" fill="none" stroke="#29B6F6" stroke-width="2.5" stroke-linecap="round"/>
-                </g>
-
-                <!-- 6. Brand Name & Tagline -->
-                <g id="bpart-type" class="logo-part cursor-pointer" onclick="inspectLogoElement('all')">
-                  <text x="170" y="382" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="38" fill="#0D4829">ScaniFlora</text>
-                  <text x="170" y="406" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="500" font-size="16" fill="#6B7280">Every tree has a story.</text>
-                </g>
-              </svg>
-
-              <!-- Interactive Element Pills -->
+              <!-- Interactive Element Pills (Strictly the 4 Elements from Reference Sheet) -->
               <div class="flex flex-wrap justify-center gap-1.5 mt-3">
-                <button onclick="inspectLogoElement('all')" id="lpill-all" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-sf-dark text-white">All</button>
-                <button onclick="inspectLogoElement('frame')" id="lpill-frame" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">Mobile Frame</button>
-                <button onclick="inspectLogoElement('reticle')" id="lpill-reticle" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">Reticle Corners</button>
-                <button onclick="inspectLogoElement('trunk')" id="lpill-trunk" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">'S' Trunk &amp; Roots</button>
-                <button onclick="inspectLogoElement('canopy')" id="lpill-canopy" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">Leaf Canopy &amp; QR</button>
-                <button onclick="inspectLogoElement('swoosh')" id="lpill-swoosh" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-swoosh border border-sf-swoosh/30">Blue Swoosh</button>
+                <button onclick="inspectLogoElement('all')" id="lpill-all" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-sf-dark text-white">Full Logo</button>
+                <button onclick="inspectLogoElement('frame')" id="lpill-frame" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">1. Mobile Frame</button>
+                <button onclick="inspectLogoElement('reticle')" id="lpill-reticle" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">2. Reticle Corners</button>
+                <button onclick="inspectLogoElement('trunk')" id="lpill-trunk" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">3. 'S' Trunk &amp; Roots</button>
+                <button onclick="inspectLogoElement('canopy')" id="lpill-canopy" class="lpill px-2.5 py-1 rounded-full text-[10px] font-bold bg-white text-sf-black border border-sf-dark/15">4. Leaf Canopy &amp; QR</button>
               </div>
             </div>
 
             <!-- Dynamic Explanation Box for Selected Logo Element -->
             <div id="logo-element-explanation" class="p-3.5 rounded-2xl bg-sf-tint/80 border border-sf-dark/10">
-              <p class="text-xs font-extrabold text-sf-dark">Tap any element pill above to inspect its meaning</p>
+              <p class="text-xs font-extrabold text-sf-dark">ScaniFlora — Every tree has a story.</p>
               <p class="text-[11px] text-neutral-700 mt-1 leading-relaxed">
-                ScaniFlora is an application that makes tree identification easier and more accessible for non-forestry individuals, naturally curious people, and tourists visiting ecotourism sites.
+                Scaniflora is an application that makes tree identification easier and more accessible, especially for non-forestry individuals, naturally curious people, and tourists visiting an ecotourism sites.
               </p>
+            </div>
+
+            <!-- Visual 4-Element Breakdown Grid (Matching the 4 Columns in Reference Image) -->
+            <div class="grid grid-cols-2 gap-2.5 pt-1">
+              <!-- Element 1 -->
+              <div onclick="inspectLogoElement('frame')" class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 cursor-pointer active:scale-95 transition">
+                <div class="h-16 bg-white rounded-xl flex items-center justify-center p-2 mb-2 border border-neutral-100">
+                  <svg viewBox="0 0 360 360" class="w-12 h-12">
+                    <path d="M 85 92 V 40 Q 85 12 113 12 H 247 Q 275 12 275 40 V 92 H 270 V 54 H 90 V 92 Z" fill="#1C1C1C"/>
+                    <circle cx="180" cy="23" r="2.8" fill="#FFFFFF"/>
+                    <circle cx="143" cy="34.5" r="4.2" fill="#FFFFFF"/>
+                    <rect x="158" y="32.3" width="44" height="4.4" rx="2.2" fill="#FFFFFF"/>
+                    <path d="M 85 264 V 320 Q 85 348 113 348 H 247 Q 275 348 275 320 V 264 H 270 V 302 H 90 V 264 Z" fill="#1C1C1C"/>
+                    <circle cx="180" cy="325" r="14.5" fill="#FFFFFF"/>
+                  </svg>
+                </div>
+                <p class="text-[11px] font-extrabold text-sf-black">Outer Frame Elements</p>
+                <p class="text-[10px] font-bold text-sf-dark">Mobile Frame</p>
+                <p class="text-[10px] text-neutral-600 mt-1 leading-snug">Emphasizes its identity as a digital application, mobile interface, and holistic information resource.</p>
+              </div>
+
+              <!-- Element 2 -->
+              <div onclick="inspectLogoElement('reticle')" class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 cursor-pointer active:scale-95 transition">
+                <div class="h-16 bg-white rounded-xl flex items-center justify-center p-2 mb-2 border border-neutral-100">
+                  <svg viewBox="0 0 360 360" class="w-12 h-12">
+                    <path d="M 93 152 V 108 Q 93 92 109 92 H 154" fill="none" stroke="#1C1C1C" stroke-width="8" stroke-linecap="square"/>
+                    <path d="M 206 265 H 250 Q 266 265 266 249 V 202" fill="none" stroke="#1C1C1C" stroke-width="8" stroke-linecap="square"/>
+                  </svg>
+                </div>
+                <p class="text-[11px] font-extrabold text-sf-black">Scanning Reticle Corners</p>
+                <p class="text-[10px] font-bold text-sf-dark">Camera Targeting</p>
+                <p class="text-[10px] text-neutral-600 mt-1 leading-snug">Symbolizes camera targeting, active focus, framing, and capturing botanical QR codes.</p>
+              </div>
+
+              <!-- Element 3 -->
+              <div onclick="inspectLogoElement('trunk')" class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 cursor-pointer active:scale-95 transition">
+                <div class="h-16 bg-white rounded-xl flex items-center justify-center p-2 mb-2 border border-neutral-100">
+                  <svg viewBox="115 190 130 85" class="w-14 h-12">
+                    <path d="M 164 211 C 158 205, 151 200, 142 197 C 150 198, 156 200, 161 204 C 159 201, 158 198, 158 195 L 163 195 C 163 200, 165 204, 169 208 Z" fill="#0D4829"/>
+                    <path d="M 188 200 C 165 200, 156 208, 158 219 C 160 230, 189 235, 189 249 C 189 258, 174 263, 148 266 L 138 263 L 125 266 C 142 256, 155 253, 166 254 C 175 252, 178 247, 177 242 C 175 233, 147 228, 147 216 C 147 204, 163 197, 188 200 Z" fill="#0D4829"/>
+                    <path d="M 215 197 C 197 198, 170 202, 170 215 C 170 225, 199 230, 199 246 C 199 256, 189 262, 174 265 C 192 262, 204 256, 205 245 C 206 229, 179 224, 179 214 C 179 206, 196 203, 215 197 Z" fill="#3B9862"/>
+                    <path d="M 203 249 C 212 254, 222 260, 234 266 L 214 261 L 204 266 L 194 259 Z" fill="#3B9862"/>
+                  </svg>
+                </div>
+                <p class="text-[11px] font-extrabold text-sf-black">'S' Trunk &amp; Roots</p>
+                <p class="text-[10px] font-bold text-sf-dark">Initial for "Scan"</p>
+                <p class="text-[10px] text-neutral-600 mt-1 leading-snug">Two-tone 'S' trunk and roots signify deep knowledge and sturdy foundation for discovery.</p>
+              </div>
+
+              <!-- Element 4 -->
+              <div onclick="inspectLogoElement('canopy')" class="p-3 rounded-2xl bg-sf-cream border border-sf-dark/10 cursor-pointer active:scale-95 transition">
+                <div class="h-16 bg-white rounded-xl flex items-center justify-center p-2 mb-2 border border-neutral-100">
+                  <div id="mini-canopy-preview" class="w-12 h-12 flex items-center justify-center"></div>
+                </div>
+                <p class="text-[11px] font-extrabold text-sf-black">Leaf Canopy &amp; QR Code</p>
+                <p class="text-[10px] font-bold text-sf-dark">Flora + Scan</p>
+                <p class="text-[10px] text-neutral-600 mt-1 leading-snug">Green leaf canopy seamlessly integrated with a functional QR code grid.</p>
+              </div>
             </div>
           </div>
 
-          <!-- Official Color Palette Swatches (Tap to Copy HEX) -->
+          <!-- Ready-to-Use HTML Favicon Code & Preview Card -->
           <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3">
             <div class="flex items-center justify-between">
-              <h3 class="text-sm font-serif font-bold text-sf-dark">Official Color Palettes</h3>
+              <div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-mid">Embedded in &lt;head&gt;</span>
+                <h3 class="text-sm font-serif font-bold text-sf-dark">Site Favicon Preview &amp; Code</h3>
+              </div>
+              <button onclick="copyFaviconLine()" class="px-3 py-1.5 rounded-xl bg-sf-dark hover:bg-sf-mid text-white text-[11px] font-extrabold transition">
+                Copy Favicon Line
+              </button>
+            </div>
+
+            <!-- Live Multi-Size Favicon Previews (16px, 32px, 64px) -->
+            <div class="flex items-center justify-around p-3 rounded-2xl bg-sf-cream border border-sf-dark/10">
+              <div class="flex flex-col items-center gap-1">
+                <div id="fav-preview-16" class="w-4 h-4 bg-white rounded shadow-sm overflow-hidden"></div>
+                <span class="text-[10px] font-mono text-neutral-500">16x16 Tab</span>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div id="fav-preview-32" class="w-8 h-8 bg-white rounded-md shadow-sm overflow-hidden"></div>
+                <span class="text-[10px] font-mono text-neutral-500">32x32 Retina</span>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <div id="fav-preview-64" class="w-14 h-14 bg-white rounded-xl shadow-sm overflow-hidden p-0.5"></div>
+                <span class="text-[10px] font-mono text-neutral-500">64x64 App Icon</span>
+              </div>
+            </div>
+
+            <p class="text-[11px] text-neutral-600 leading-relaxed">
+              This prototype already includes the ScaniFlora favicon inside the <code class="font-mono text-sf-dark font-bold">&lt;head&gt;</code> tag right below <code class="font-mono text-sf-dark font-bold">&lt;title&gt;</code>. Tap above to copy the single-line code snippet.
+            </p>
+          </div>
+
+          <!-- Official 4 Color Palettes Swatches (Tap to Copy HEX) -->
+          <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-serif font-bold text-sf-dark">Color Palettes</h3>
               <span class="text-[10px] text-neutral-400 font-mono">Tap swatch to copy HEX</span>
             </div>
 
@@ -1037,8 +1001,8 @@
                 <div class="h-12 rounded-xl bg-[#1C1C1C] mb-2 flex items-end justify-end p-1.5">
                   <span class="font-mono text-[10px] text-white/80 font-bold">#1C1C1C</span>
                 </div>
-                <p class="text-xs font-extrabold text-sf-black">Very dark gray</p>
-                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Strong modern anchor representing digital tech, hardware &amp; scanning.</p>
+                <p class="text-xs font-extrabold text-sf-black">Very dark gray (mostly black)</p>
+                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Provides a strong modern anchor representing digital tech, hardware, and mobile scanning functionality.</p>
               </div>
 
               <!-- #0D4829 -->
@@ -1047,7 +1011,7 @@
                   <span class="font-mono text-[10px] text-white/90 font-bold">#0D4829</span>
                 </div>
                 <p class="text-xs font-extrabold text-sf-black">Very dark cyan</p>
-                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Stability, nature, longevity, and deep-rooted knowledge of flora.</p>
+                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Represents stability, nature, longevity, deep-rooted knowledge and the core identity of trees and flora.</p>
               </div>
 
               <!-- #3B9862 -->
@@ -1055,8 +1019,8 @@
                 <div class="h-12 rounded-xl bg-[#3B9862] mb-2 flex items-end justify-end p-1.5">
                   <span class="font-mono text-[10px] text-white font-bold">#3B9862</span>
                 </div>
-                <p class="text-xs font-extrabold text-sf-black">Dark moderate lime</p>
-                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Active life, biodiversity, and energy of thriving plant ecosystems.</p>
+                <p class="text-xs font-extrabold text-sf-black">Dark moderate lime green</p>
+                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Adds depth and dynamism to the foliage. Symbolizes active life, biodiversity, and thriving plant ecosystems.</p>
               </div>
 
               <!-- #78C090 -->
@@ -1064,8 +1028,8 @@
                 <div class="h-12 rounded-xl bg-[#78C090] mb-2 flex items-end justify-end p-1.5">
                   <span class="font-mono text-[10px] text-sf-black font-bold">#78C090</span>
                 </div>
-                <p class="text-xs font-extrabold text-sf-black">Desaturated cyan</p>
-                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Bright contrast representing new leaves, fresh growth &amp; vitality.</p>
+                <p class="text-xs font-extrabold text-sf-black">Slightly desaturated cyan</p>
+                <p class="text-[10px] text-neutral-600 mt-0.5 leading-snug">Offers a bright contrast that represents new leaves, fresh growth, and modern vitality.</p>
               </div>
             </div>
           </div>
@@ -1090,7 +1054,7 @@
                 <div class="w-10 h-10 rounded-xl bg-sf-dark text-white font-serif font-bold text-xs flex items-center justify-center shrink-0">JJ</div>
                 <div class="flex-1 min-w-0">
                   <p class="text-xs font-extrabold text-sf-black">John Dep Jacosalem</p>
-                  <p class="text-[11px] font-semibold text-sf-swoosh">Chief Technology Officer (CTO)</p>
+                  <p class="text-[11px] font-semibold text-sf-dark">Chief Technology Officer (CTO)</p>
                 </div>
               </div>
 
@@ -1140,7 +1104,7 @@
           </button>
 
           <span id="sheet-tag-badge" class="font-mono text-xs font-bold px-2.5 py-0.5 rounded-full bg-sf-mid text-white">
-            QR TAG: SF-001
+            QR TAG: SF-01
           </span>
 
           <button onclick="speakActiveTreeProfile()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-sf-light transition" title="Listen to Audio Guide">
@@ -1229,115 +1193,738 @@
        ========================================================= -->
   <script>
     /*************************************************************
-     * 1. PRE-LOADED BOTANICAL TREE DATABASE (8 COMPLETE TREES)
+     * 1. COMPLETE 39-SPECIES BOTANICAL DISCOVERY DATABASE
+     *    (Universal Platform IDs: SF-01 through SF-39)
      *************************************************************/
     const treesDatabase = [
       {
-        id: 'SF-001',
-        commonName: 'Narra',
-        scientificName: 'Pterocarpus indicus',
-        familyName: 'Fabaceae',
-        status: 'Vulnerable',
-        habitat: 'Primary & secondary lowland rainforests, riverbanks • Station 01',
-        height: '25–35 m',
-        description: 'Narra is a large, majestic deciduous tree with a fluted trunk and a wide-spreading dome crown whose lower branches arch gracefully toward the ground. It bears compound pinnate leaves and bursts into fragrant, golden-yellow panicles of flowers before the rainy season.',
-        usesAndBenefits: 'Fixes nitrogen in soil and stabilizes riverbanks in reforestation projects. Its lustrous, termite-resistant rose-scented heartwood is prized for heirloom furniture and instruments, while bark and leaf infusions are used in traditional folk remedies.',
-        interestingFacts: 'Declared the National Tree of the Philippines in 1934. Narra flowers bloom synchronously for just a single day before carpeting the forest floor in golden petals.'
+        id: 'SF-01',
+        num: 1,
+        commonName: 'Almaciga',
+        scientificName: 'Agathis dammara',
+        familyName: 'Araucariaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Vulnerable',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 50–60 meters tall',
+        habitat: 'Found in Montane forests of Luzon, Palawan, Visayas, and Mindanao, typically above 200 meters.',
+        description: 'Almaciga is a large tree with a pyramidal crown and whorled branches, growing to a height of 50 to 60 meters, the trunk up to 3 meters in diameter with a smooth and graying bark exuding resin. Leaves are simple, opposite or nearly so, entire and leathery, oblong-lanceolate to linear-lanceolate, 3 to 9.5 cm long. Male cones are cylindrical-oblong; female cones are globose or ovoid, up to 5 cm in diameter.',
+        interestingFacts: 'Almaciga is considered the supreme ruler of the forest, the king among trees, believed to absorb the essence of nature, imbued with its own unique spirituality and aura. As such, it was chosen by Indian kings as the exclusive timber for royalty.'
       },
       {
-        id: 'SF-002',
+        id: 'SF-02',
+        num: 2,
+        commonName: 'Anang',
+        scientificName: 'Diospyros pyrrhocarpa',
+        familyName: 'Ebenaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 23–30 meters tall',
+        habitat: 'Found in Lowland mixed dipterocarp forest.',
+        description: 'Anang is a medium sized tree up to 23 m tall. Its alternate, stalked leaves are oblong-elliptic to oblong-obovate, up to 30 cm long and 9 cm wide. The midrib is prominent below, covered with rusty hairs in young leaves. Secondary veins are also sunken below, arching towards the leaf margin.',
+        interestingFacts: 'Anang is a favorite among fruit tree collectors and enthusiasts because of its brown, hairy fruits, which are edible and sweet. Its fruit is said to be even more delicious and flavorful than mabolo. Its wood, known as "black ebony," is also valued for its durability and is traditionally used in making bowling balls and golf clubs.'
+      },
+      {
+        id: 'SF-03',
+        num: 3,
+        commonName: 'Antipolo',
+        scientificName: 'Artocarpus blancoi',
+        familyName: 'Moraceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 15–30 meters tall',
+        habitat: 'Found in Lowland forest and thickets.',
+        description: 'Antipolo is a medium-sized, evergreen, dioecious tree that exudes white latex when wounded, with very large incised leaves measuring 20 to 60 cm long.',
+        interestingFacts: 'Antipolo City in Rizal is believed to have derived its name from the Antipolo tree, which was once abundant in the area. Additionally, studies have shown that extracts from its bark possess strong antimicrobial properties, suggesting its potential use in traditional medicine.'
+      },
+      {
+        id: 'SF-04',
+        num: 4,
+        commonName: 'Bagtikan',
+        scientificName: 'Parashorea malaanonan',
+        familyName: 'Dipterocarpaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 60 meters tall',
+        habitat: 'Found in lowland mixed Dipterocarp forest.',
+        description: 'Bagtikan is a large emergent dipterocarp tree native to the Philippines and northeast Sabah. The name malaanonan is derived from Tagalog (mala = false and anonang = custard apple).',
+        interestingFacts: 'Bagtikan was once an important commercial timber in the Philippines, particularly for plywood manufacturing in old Philippine houses. Despite logging pressure, Bagtikan has the advantage of growing faster than many other Dipterocarp members and can tolerate hot and dry summer conditions.'
+      },
+      {
+        id: 'SF-05',
+        num: 5,
+        commonName: 'Balobo',
+        scientificName: 'Diplodiscus paniculatus',
+        familyName: 'Malvaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 20–80 meters tall',
+        habitat: 'Commonly found in primary forests at low and medium elevations.',
+        description: 'Balobo is an endemic forest tree species in the Philippines with buttressed roots and scaly bark. It is one of the lesser-used timber species with diverse ecological and practical applications.',
+        interestingFacts: 'The seeds of the Balobo tree are edible when boiled, making them a potential food source (PROSEA, 2017). Its bark can also be used to produce bast ropes, demonstrating its practical value for traditional everyday applications (Fernando et al., 2004).'
+      },
+      {
+        id: 'SF-06',
+        num: 6,
+        commonName: 'Banuyo',
+        scientificName: 'Wallaceodendron celebicum',
+        familyName: 'Fabaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Near Threatened',
+        daoStatus: 'Other Threatened Species',
+        height: 'Up to 45 meters tall',
+        habitat: 'Commonly found in Subtropical/Tropical Moist Lowland.',
+        description: 'Banuyo is a flowering plant species in the legume family native to the Philippines and Sulawesi. It is the sole species in the genus Wallaceodendron belonging to the mimosoid clade.',
+        interestingFacts: 'Banuyo is commonly known as the "honey tree" because of its association with honey production. It is also tolerant of salty conditions, making it suitable for planting in coastal and riverbank areas where it helps control soil erosion.'
+      },
+      {
+        id: 'SF-07',
+        num: 7,
+        commonName: 'Batete',
+        scientificName: 'Prioria alternifolia',
+        familyName: 'Fabaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 15–32 meters tall',
+        habitat: 'Commonly found in Subtropical/Tropical Moist Lowland.',
+        description: 'Batete is a Philippine legume tree (formerly Kingiodendron alternifolium) described as having an aromatic sap used in making incense and a reddish-brown oily wood used in cabinet work and furniture.',
+        interestingFacts: 'Like many leguminous trees, Batete produces seed pods that contribute to natural forest regeneration and nitrogen enrichment in lowland tropical ecosystems.'
+      },
+      {
+        id: 'SF-08',
+        num: 8,
+        commonName: 'Bitaog',
+        scientificName: 'Calophyllum inophyllum',
+        familyName: 'Calophyllaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 25 meters tall',
+        habitat: 'Commonly found in forests, inland wetlands, and coastal areas near shorelines and tidal zones.',
+        description: 'Calophyllum inophyllum is a slow-growing, medium-sized evergreen tree with a spreading crown, growing up to 25–35 meters tall. The bole is usually short and twisted or leaning, up to 150 cm in diameter. All parts of the plant contain a sticky yellowish latex.',
+        interestingFacts: 'The kernel of Bitaog seeds contains approximately 70–75% oil, commonly known as Bitaog oil or Tamanu oil. This oil is highly valued and traditionally referred to as the "sacred oil" of ancient Tahitians because of its historical use in healing and skin care.'
+      },
+      {
+        id: 'SF-09',
+        num: 9,
+        commonName: 'Cacao',
+        scientificName: 'Theobroma cacao',
+        familyName: 'Malvaceae',
+        uses: 'Food',
+        origin: 'non-native',
+        iucnStatus: 'Data Deficient',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 8–20 meters tall',
+        habitat: 'Found in the understory of evergreen rainforests in humid tropical areas with well-drained soil.',
+        description: 'Cacao is a small, evergreen tree with a globose crown widely cultivated in lowland tropical areas for its seed. It was grown by the Aztecs and Mayans, who considered it a divine plant and used the seeds as currency.',
+        interestingFacts: 'Cacao is the source of cocoa and chocolate. Its small flowers and large fruits grow directly on the trunk and older branches—a condition called cauliflory. Each fruit contains 20–40 seeds surrounded by sweet, edible pulp, and cocoa butter is used in food, cosmetics, and medicine.'
+      },
+      {
+        id: 'SF-10',
+        num: 10,
+        commonName: 'Caimito',
+        scientificName: 'Chrysophyllum cainito',
+        familyName: 'Sapotaceae',
+        uses: 'Food',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 4–20 meters tall',
+        habitat: 'Found in Humid woodlands at low to medium elevations.',
+        description: 'Chrysophyllum cainito is an evergreen shrub or tree with a low, spreading crown. It produces a popular fruit, has local medicinal uses, and is valued for its foliage, which is bright blue-green above and coppery beneath.',
+        interestingFacts: 'Caimito is called "Star Apple" because its seeds form a star-shaped pattern when the fruit is cut horizontally. Interestingly, ripe fruits do not naturally fall from the tree, so they must be harvested by hand.'
+      },
+      {
+        id: 'SF-11',
+        num: 11,
+        commonName: 'Coconut',
+        scientificName: 'Cocos nucifera',
+        familyName: 'Arecaceae',
+        uses: 'Multi-use',
+        origin: 'native',
+        iucnStatus: 'Not Evaluated',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 2–30 meters tall',
+        habitat: 'Commonly found along tropical coastlines and inland alluvial plains with high water tables.',
+        description: 'Coconut is a variable, single-stemmed, evergreen palm tree. It is one of the most useful plants for humans, providing a wide range of foods, drink, oil, coir fiber, timber, and thatch.',
+        interestingFacts: 'Tall varieties may live 80–100 years, while dwarf varieties begin fruiting as early as their third year. A rare "coconut pearl," a hard calcium-carbonate concretion inside the nut cavity, is sometimes found and used in jewelry.'
+      },
+      {
+        id: 'SF-12',
+        num: 12,
+        commonName: 'Dao',
+        scientificName: 'Dracontomelon dao',
+        familyName: 'Anacardiaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Threatened Species',
+        height: 'Up to 55 meters tall',
+        habitat: 'Found in primary and secondary forests, including alluvial flats and swampy locations up to 500 m elevation.',
+        description: 'Dracontomelon dao is an evergreen or briefly deciduous tree. The straight, cylindrical bole of larger specimens usually has dramatic buttresses up to 5 meters high and can be branchless for up to 20 meters.',
+        interestingFacts: 'Pacific walnut or Dao produces small, sour-sweet fruits that are eaten raw or cooked, and its flowers, leaves, and seeds are also edible. The tree flowers almost throughout the year, often just before new bronze-colored leaves emerge.'
+      },
+      {
+        id: 'SF-13',
+        num: 13,
+        commonName: 'Dungon',
+        scientificName: 'Heritiera sylvatica',
+        familyName: 'Malvaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 45 meters tall',
+        habitat: 'Grows in dry primary forests at low and medium altitudes in the Philippines, Sulawesi, and Irian Jaya.',
+        description: 'Heritiera sylvatica, locally called dungon, is a large tree with a columnar bole, buttressed base, simple leaves that are silvery-scaly beneath, and winged, scaly fruits.',
+        interestingFacts: 'Dungon is a valuable timber tree in the Philippines known for its extraordinarily strong and durable wood, prominent buttress roots, and distinctive leaves with silvery, scaly undersides.'
+      },
+      {
+        id: 'SF-14',
+        num: 14,
+        commonName: 'Eugenia',
+        scientificName: 'Syzygium myrtifolium',
+        familyName: 'Myrtaceae',
+        uses: 'Ornamental',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 8 meters tall',
+        habitat: 'Commonly found in lowland forests near coastal areas behind mangroves and in ridge forests up to 900 m.',
+        description: 'Eugenia (Syzygium myrtifolium) is an evergreen shrub or small tree harvested from the wild for local medicine and widely cultivated in Southeast Asia as an ornamental hedge plant.',
+        interestingFacts: 'Its new leaves emerge bright reddish-brown, giving the plant its attractive "redbud" appearance. Leaf extracts have also demonstrated antimutagenic activity in laboratory research.'
+      },
+      {
+        id: 'SF-15',
+        num: 15,
+        commonName: 'Gisok-gisok',
+        scientificName: 'Hopea philippinensis',
+        familyName: 'Dipterocarpaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Endangered',
+        daoStatus: 'Critically Endangered',
+        height: 'Up to 30 meters tall',
+        habitat: 'Found in evergreen forests on hills throughout the Philippines at elevations up to 500 meters.',
+        description: 'Hopea philippinensis is a small dipterocarp tree with a trunk supported by buttress roots. Despite its modest size, it is harvested for its valuable merawan timber.',
+        interestingFacts: 'Gisok-gisok wood is commercially prized for light construction, door and window frames, flooring, joinery, and turnery. It is insect-pollinated and restricted to evergreen, non-seasonal hill forests.'
+      },
+      {
+        id: 'SF-16',
+        num: 16,
+        commonName: 'Gubas',
+        scientificName: 'Endospermum peltatum',
+        familyName: 'Euphorbiaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 35 meters tall',
+        habitat: 'Fairly common in humid primary and secondary forests along rivers, hillsides, and valleys up to 640 meters.',
+        description: 'Gubas is a medium-sized to large dioecious tree that grows with or without prominent buttress roots. Its seeds are edible and it is valued for its light timber, locally known as "sesendok."',
+        interestingFacts: 'Gubas wood is used for clogs, matchboxes, drawing boards, and toys. In the Philippines, spiral shavings of its wood are used as core material for a panel called "placarol," valued for high compression resistance.'
+      },
+      {
+        id: 'SF-17',
+        num: 17,
+        commonName: 'Hagakhak',
+        scientificName: 'Dipterocarpus validus',
+        familyName: 'Dipterocarpaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 50 meters tall',
+        habitat: 'Found in primary and secondary lowland forests, particularly in flat areas, freshwater swamps, and riverbanks.',
+        description: 'Dipterocarpus validus is a large tropical tree in the Dipterocarpaceae family with a tall straight trunk and buttress roots. It is valued for its keruing timber and produces an oleo-resin.',
+        interestingFacts: 'The oleo-resin of Hagakhak is traditionally harvested by cutting a cavity near the base of the trunk. Its fruits feature enlarged wing-like calyx lobes adapted for wind dispersal.'
+      },
+      {
+        id: 'SF-18',
+        num: 18,
+        commonName: 'Kalantas',
+        scientificName: 'Toona calantas',
+        familyName: 'Meliaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Data Deficient',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 25 meters tall',
+        habitat: 'Found in primary rainforests and seasonally dry forests at low to medium elevations.',
+        description: 'Kalantas, also called Philippine cedar, is a deciduous tree in the mahogany family (Meliaceae) with a straight, cylindrical bole up to 150 cm in diameter and reddish, fragrant timber.',
+        interestingFacts: 'The wood of Kalantas has a lasting aroma similar to Spanish cedar and is prized for cigar boxes, fine furniture, carving, and boat building. Because it is native to the Philippines, it is championed as a native alternative to introduced mahogany.'
+      },
+      {
+        id: 'SF-19',
+        num: 19,
+        commonName: 'Kalumpit',
+        scientificName: 'Terminalia microcarpa',
+        familyName: 'Combretaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 10–40 meters tall',
+        habitat: 'Found in Primary Forests at low elevations.',
+        description: 'Terminalia microcarpa is a semideciduous tree in the Combretaceae family with a straight, cylindrical trunk, buttresses at the base, a broad semi-open crown, and small fleshy plum-like fruits.',
+        interestingFacts: 'The fruit of Kalumpit can be eaten raw, cooked, or processed into jam and wine, while its bark is exceptionally rich in tannins—containing about 42% tannin.'
+      },
+      {
+        id: 'SF-20',
+        num: 20,
+        commonName: 'Kamagong',
+        scientificName: 'Diospyros blancoi',
+        familyName: 'Ebenaceae',
+        uses: 'Wood wares',
+        origin: 'native',
+        iucnStatus: 'Near Threatened',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 18–33 meters tall',
+        habitat: 'Found in Secondary Forest at low and medium elevations.',
+        description: 'Mabolo, velvet apple, or kamagong is a slow-growing evergreen tree in the ebony family (Ebenaceae) with a stout, black, furrowed trunk, glossy green leaves, and velvety reddish-brown berries.',
+        interestingFacts: 'The fruit has sweet, aromatic cream-colored flesh, while the tree yields dense, durable dark ebony-like timber used for carvings, furniture, tool handles, and musical instruments.'
+      },
+      {
+        id: 'SF-21',
+        num: 21,
+        commonName: 'Katmon',
+        scientificName: 'Dillenia philippinensis',
+        familyName: 'Dilleniaceae',
+        uses: 'Food ingredient',
+        origin: 'native',
+        iucnStatus: 'Near Threatened',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 17 meters tall',
+        habitat: 'Found in primary forests and more open secondary forests.',
+        description: 'Katmon is a small evergreen tree endemic to the Philippines that branches low on the trunk and features large, leathery, toothed leaves, smooth bark, and showy white flowers.',
+        interestingFacts: 'The fleshy sepals surrounding the fruit of Katmon are edible raw or cooked with a pleasantly acidic, green-apple flavor; they are also used to prepare cough syrup, while the fruit pulp can be used as a natural shampoo and the bark yields a red dye.'
+      },
+      {
+        id: 'SF-22',
+        num: 22,
+        commonName: 'Lamog',
+        scientificName: 'Planchonia spectabilis',
+        familyName: 'Lecythidaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Near Threatened',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 20 meters tall',
+        habitat: 'Commonly found in humid areas near rivers, streams, and swamps.',
+        description: 'Lamog is a large native tree up to 20 meters tall and 60 cm in diameter with dark brown, slightly flaky bark and distinctive leaves that turn crimson red as they mature.',
+        interestingFacts: 'As Lamog leaves mature, they turn a brilliant crimson red against the dark forest canopy. The tree produces showy nocturnal flowers with clusters of pink and white stamens that give them a fluffy brush-like appearance.'
+      },
+      {
+        id: 'SF-23',
+        num: 23,
+        commonName: 'Large leaf mahogany',
+        scientificName: 'Swietenia macrophylla',
+        familyName: 'Meliaceae',
+        uses: 'Timber, furniture',
+        origin: 'non-native',
+        iucnStatus: 'Endangered',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 30–40 meters tall',
+        habitat: 'Found in mixed hardwood forests and along riverbanks with deep, fertile alluvial soils.',
+        description: 'Large-leaf mahogany (Honduras mahogany) is a very large tree in the Meliaceae family with a straight cylindrical trunk, buttress roots, broad rounded crown, large pinnate leaves, and woody capsule fruits.',
+        interestingFacts: 'Considered one of the world’s finest cabinet timbers, its winged seeds rotate as they fall and can travel up to 500 m by wind. Outside its native range, it can colonize disturbed habitats and compete with native vegetation.'
+      },
+      {
+        id: 'SF-24',
+        num: 24,
+        commonName: 'Mangga',
+        scientificName: 'Mangifera indica',
+        familyName: 'Anacardiaceae',
+        uses: 'Food',
+        origin: 'non-native',
+        iucnStatus: 'Data Deficient',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 10–45 meters tall',
+        habitat: 'Found in tropical and subtropical regions from sea level to 1,200 meters in elevation.',
+        description: 'Mangifera indica (mango) is a large, spreading evergreen tree with a dense dark-green crown, greyish-brown fissured bark, leathery leaves, panicles of small flowers, and fleshy drupe fruits.',
+        interestingFacts: 'Mango has more than 1,000 recognized cultivars worldwide. It renews its leaves irregularly in flushes and possesses a deep taproot capable of reaching water tables during dry seasons.'
+      },
+      {
+        id: 'SF-25',
+        num: 25,
+        commonName: 'Marang banguhan',
+        scientificName: 'Artocarpus odoratissimus',
+        familyName: 'Moraceae',
+        uses: 'Food',
+        origin: 'non-native',
+        iucnStatus: 'Near Threatened',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 25 meters tall',
+        habitat: 'Found in secondary and evergreen forests, particularly in areas with sandy-clay soils.',
+        description: 'Marang banguhan is an evergreen fruit tree with a straight trunk, spreading crown, large elliptic leaves, and large spiny syncarp fruits filled with snowy-white, sweet, aromatic arils.',
+        interestingFacts: 'Its fruit is celebrated across Mindanao and Borneo for its intensely sweet fragrance and custard-like texture, though its short shelf life makes freshly harvested Marang a local delicacy.'
+      },
+      {
+        id: 'SF-26',
+        num: 26,
         commonName: 'Molave',
         scientificName: 'Vitex parviflora',
         familyName: 'Lamiaceae',
-        status: 'Vulnerable',
-        habitat: 'Coastal limestone soils & dry lowland forests • Station 02',
-        height: '15–25 m',
-        description: 'Molave is a medium-to-large tree featuring a rugged, fluted trunk with light gray fibrous bark. Its leaves are palmately compound with three lance-shaped leaflets and clusters of small bluish-purple flowers that nourish native bees.',
-        usesAndBenefits: 'Produces one of the hardest and most durable timbers in Southeast Asia, historically used for bridges and shipbuilding. Ecologically, it is a premier pioneer species for rehabilitating rocky karst hills.',
-        interestingFacts: 'In Filipino literature and proverbs, the Molave is the ultimate emblem of resilience—immortalized in Rafael Zulueta da Costa’s classic poem "Like the Molave".'
+        uses: 'Furniture',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 30 meters tall',
+        habitat: 'Found in monsoon forests, which experience distinct wet and dry seasons.',
+        description: 'Molave is a deciduous hardwood tree with a wide-spreading crown, palmately compound leaves with three leaflets, violet-blue flowers, and exceptionally hard, durable wood.',
+        interestingFacts: 'Molave is one of the Philippines’ most legendary structural timbers, prized for furniture, railroad ties, and construction, making its conservation in ecoparks vital to protect remaining natural populations.'
       },
       {
-        id: 'SF-003',
-        commonName: 'Kamagong (Mabolo)',
-        scientificName: 'Diospyros blancoi',
-        familyName: 'Ebenaceae',
-        status: 'Critically Endangered',
-        habitat: 'Endemic lowland & medium-altitude rainforests • Station 03',
-        height: '15–20 m',
-        description: 'An indigenous evergreen tree with a dark-barked trunk and leathery oblong leaves that are silvery-hairy underneath. It bears round fruits covered in velvety reddish-brown hairs ("Mabolo") with sweet, aromatic flesh.',
-        usesAndBenefits: 'Yields "Philippine Ebony" (Kamagong), an extraordinarily dense jet-black heartwood prized for traditional martial arts Arnis sticks and fine carvings. Its fruit provides vitamins, calcium, and iron.',
-        interestingFacts: 'Kamagong wood is so dense and heavy that it does not float—it sinks immediately in water like ironwood, and is strictly protected under environmental law.'
-      },
-      {
-        id: 'SF-004',
-        commonName: 'Rain Tree (Acacia)',
-        scientificName: 'Samanea saman',
-        familyName: 'Fabaceae',
-        status: 'Least Concern',
-        habitat: 'Campus ovals, heritage parks & open avenues • Station 04',
-        height: '20–25 m',
-        description: 'An iconic wide-canopied tree with a massive symmetrical umbrella crown spanning up to 40 meters. It features bipinnate leaves that fold inward at dusk and delicate pink-and-white powder-puff flowers.',
-        usesAndBenefits: 'Provides exceptional urban cooling, carbon sequestration, and shade for schools and parks. Its grooved bark supports thriving communities of harmless epiphytic ferns and orchids.',
-        interestingFacts: 'Called the "Rain Tree" because its leaflets fold shut when rain clouds gather or at night, allowing rain and dew to fall through to keep the grass green below.'
-      },
-      {
-        id: 'SF-005',
-        commonName: 'Philippine Teak',
-        scientificName: 'Tectona philippinensis',
-        familyName: 'Lamiaceae',
-        status: 'Critically Endangered',
-        habitat: 'Endemic coastal limestone ridges • Station 05',
-        height: '15–22 m',
-        description: 'A rare, endemic tree featuring flaky pale bark, elliptic rough-textured leaves, and terminal clusters of pale violet blooms uniquely adapted to rocky limestone slopes.',
-        usesAndBenefits: 'Provides critical nesting habitat for native birds and anchors steep coastal limestone cliffs against erosion.',
-        interestingFacts: 'Unlike commercial teak, Philippine Teak is strictly endemic to small pockets of Batangas and Mindoro in the Philippines, making every tagged tree a living genetic treasure.'
-      },
-      {
-        id: 'SF-006',
-        commonName: 'White Lauan',
-        scientificName: 'Shorea contorta',
-        familyName: 'Dipterocarpaceae',
-        status: 'Critically Endangered',
-        habitat: 'Dipterocarp lowland rainforest canopy • Station 06',
-        height: '35–50 m',
-        description: 'A towering emergent rainforest giant with a straight cylindrical trunk and prominent buttress roots. Its fruits possess five elongated wing-like sepals that spin like helicopters in the wind.',
-        usesAndBenefits: 'Forms the structural backbone of Philippine tropical rainforests, regulating watershed retention and forest microclimates.',
-        interestingFacts: 'Its winged seeds are aerodynamically twisted (hence "contorta"), allowing them to autorotate gently and disperse far from the parent tree.'
-      },
-      {
-        id: 'SF-007',
-        commonName: 'English Oak',
-        scientificName: 'Quercus robur',
-        familyName: 'Fagaceae',
-        status: 'Least Concern',
-        habitat: 'Temperate botanical heritage meadows • Station 07',
-        height: '20–40 m',
-        description: 'Featured in the ScaniFlora presentation imagery, this long-lived deciduous tree is recognized by its deeply fissured bark, sturdy spreading branches, multi-lobed leaves, and acorns held in scaly cups.',
-        usesAndBenefits: 'Supports one of the highest biodiversity counts of insects, lichens, birds, and mammals of any tree species.',
-        interestingFacts: 'An English Oak can live for over 1,000 years—spending 300 years growing, 300 years as a mature giant, and 300 years gracefully sheltering wildlife.'
-      },
-      {
-        id: 'SF-008',
-        commonName: 'Balete (Strangler Fig)',
-        scientificName: 'Ficus virens',
+        id: 'SF-27',
+        num: 27,
+        commonName: 'Nangka',
+        scientificName: 'Artocarpus heterophyllus',
         familyName: 'Moraceae',
-        status: 'Least Concern',
-        habitat: 'Ecotourism boardwalks & riverine forests • Station 08',
-        height: '18–30 m',
-        description: 'A remarkable fig tree characterized by an intricate lattice of aerial prop roots that descend from its branches to the ground, eventually forming a massive buttressed trunk.',
-        usesAndBenefits: 'Acts as a keystone ecological species in tropical forests by producing figs year-round that sustain fruit bats, hornbills, and native wildlife.',
-        interestingFacts: 'Each species of Ficus has a mutually dependent relationship with its own unique species of tiny fig wasp.'
+        uses: 'Food, guitar making',
+        origin: 'non-native',
+        iucnStatus: 'Not Evaluated',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 25 meters tall',
+        habitat: 'Found in tropical rainforests and evergreen forests.',
+        description: 'Nangka (Jackfruit) is a fast-growing evergreen tree with a spreading crown, glossy oblong leaves, and massive spiny compound fruits.',
+        interestingFacts: 'Its giant fruits grow directly from the trunk and older branches (cauliflory)—the largest tree-borne fruit in the world. Both the golden flesh and boiled seeds are edible, while its resonant yellow heartwood is prized for making guitars and lutes.'
+      },
+      {
+        id: 'SF-28',
+        num: 28,
+        commonName: 'Bracteated noni',
+        scientificName: 'Morinda citrifolia var. bracteata',
+        familyName: 'Euphorbiaceae',
+        uses: 'Medicine',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 2–6 meters tall (occasionally 10 m)',
+        habitat: 'Found in coastal vegetation, lowland woodlands, and secondary forests.',
+        description: 'An evergreen shrub or small tree with large glossy leaves, small white tubular flowers, and distinctive ovoid multiple fruits subtended by leaf-like bracts.',
+        interestingFacts: 'Noni has traditionally been used as a folk medicinal plant across the Pacific and Southeast Asia, and as a source of natural red and yellow dyes extracted from its root bark.'
+      },
+      {
+        id: 'SF-29',
+        num: 29,
+        commonName: 'Palasan',
+        scientificName: 'Calamus maximus',
+        familyName: 'Arecaceae',
+        uses: 'Handicraft',
+        origin: 'native',
+        iucnStatus: 'Not Evaluated',
+        daoStatus: 'Other Threatened Species',
+        height: 'Climbing stems reach 50–100 meters long',
+        habitat: 'Found in primary lowland forests.',
+        description: 'Palasan is a robust, spiny, evergreen climbing rattan palm with long, flexible stems that climb high into the forest canopy using hooked flagellae.',
+        interestingFacts: 'It is one of the most sought-after true rattan species in the Philippines because its strong, uniform canes are premier material for export furniture, weaving, and basketry.'
+      },
+      {
+        id: 'SF-30',
+        num: 30,
+        commonName: 'Paper mulberry',
+        scientificName: 'Broussonetia papyrifera',
+        familyName: 'Moraceae',
+        uses: 'Paper making',
+        origin: 'non-native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 9–20 meters tall',
+        habitat: 'Found in secondary forests, open woodlands, forest edges, and disturbed areas.',
+        description: 'A deciduous shrub or small tree with a broad crown and rough leaves that vary from unlobed to deeply lobed. Its inner bark contains long, strong bast fibers.',
+        interestingFacts: 'Its inner bark has been used for centuries to make traditional high-grade paper and tapa cloth across Asia and the Pacific, though it can spread rapidly in disturbed habitats.'
+      },
+      {
+        id: 'SF-31',
+        num: 31,
+        commonName: 'Santol',
+        scientificName: 'Sandoricum koetjape',
+        familyName: 'Meliaceae',
+        uses: 'Food',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 25–50 meters tall',
+        habitat: 'Found in Lowland dipterocarp forest and tropical rainforest.',
+        description: 'Santol is a fast-growing tropical tree with a broad crown and trifoliate compound leaves. It produces globose fruits with velvety yellowish to golden-brown skin and juicy sweet-sour arils.',
+        interestingFacts: 'Santol trees can begin flowering about 5–7 years after germination. The fruit is eaten fresh or used to make jams, jellies, sinigang souring base, and marmalade.'
+      },
+      {
+        id: 'SF-32',
+        num: 32,
+        commonName: 'Smooth narra',
+        scientificName: 'Pterocarpus indicus forma indicus',
+        familyName: 'Fabaceae',
+        uses: 'Furniture',
+        origin: 'native',
+        iucnStatus: 'Endangered',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 33 meters tall',
+        habitat: 'Found in Lowland dipterocarp forest and molave-type forest.',
+        description: 'Smooth narra is a large, native Philippine hardwood tree with compound pinnate leaves, fragrant golden-yellow flowers, and flat, disc-shaped winged fruits with smooth seed-bearing centers.',
+        interestingFacts: 'Smooth Narra is distinguished by its smooth, hairless winged pods—unlike Prickly Narra (forma echinatus), which has bristle-like spines over the seed-bearing portion.'
+      },
+      {
+        id: 'SF-33',
+        num: 33,
+        commonName: 'Tangisang-bayawak',
+        scientificName: 'Ficus variegata',
+        familyName: 'Moraceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 30–40 meters tall',
+        habitat: 'Found in Lowland and mixed dipterocarp forests.',
+        description: 'Tangisang-bayawak is a large tropical fig tree with smooth, grayish bark, prominent buttresses, a broad canopy, and rounded fruits that grow in dense clusters directly along the trunk and main branches (cauliflory).',
+        interestingFacts: 'Its name comes from local folklore that monitor lizards ("bayawak") slip and "cry" while trying to climb its remarkably smooth bark to reach the figs.'
+      },
+      {
+        id: 'SF-34',
+        num: 34,
+        commonName: 'Tanguile',
+        scientificName: 'Rubroshorea polysperma',
+        familyName: 'Dipterocarpaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 50 meters tall',
+        habitat: 'Found in Evergreen mixed dipterocarp forests.',
+        description: 'Tanguile is a large, evergreen tropical hardwood tree native to the Philippines with a straight, cylindrical trunk, prominent buttresses, grayish fissured bark, and simple elliptical leaves.',
+        interestingFacts: 'Known in the timber trade as dark red "Philippine Mahogany," Tanguile seedlings require shade during early growth while mature trees emerge into full canopy sunlight.'
+      },
+      {
+        id: 'SF-35',
+        num: 35,
+        commonName: 'Tibig',
+        scientificName: 'Ficus nota',
+        familyName: 'Moraceae',
+        uses: 'Minor construction',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 4–8 meters tall',
+        habitat: 'Found in Lowland dipterocarp forests and along streams.',
+        description: 'Tibig is a small to medium-sized evergreen fig tree with spreading branches, oblong leaves rough to the touch, and clusters of rounded yellowish-green fruits growing directly on the trunk and branches.',
+        interestingFacts: 'Tibig stem tissues hold potable water that can serve as an emergency water source in the forest, while its abundant figs sustain birds, bats, and monkeys that disperse its seeds.'
+      },
+      {
+        id: 'SF-36',
+        num: 36,
+        commonName: 'White lauan',
+        scientificName: 'Pentacme contorta',
+        familyName: 'Dipterocarpaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 50 meters tall',
+        habitat: 'Found in Lowland dipterocarp forests.',
+        description: 'White Lauan is a large, evergreen hardwood tree endemic to the Philippines with a tall, straight cylindrical trunk, buttress roots, grayish fissured bark, and ovate to lance-shaped leaves.',
+        interestingFacts: 'White Lauan is strictly endemic to the Philippines. Its winged seeds spin through the air for wind dispersal, and it is one of the most important species for dipterocarp forest restoration.'
+      },
+      {
+        id: 'SF-37',
+        num: 37,
+        commonName: 'White nato',
+        scientificName: 'Planchonella macrantha',
+        familyName: 'Sapotaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: 'Up to 40 meters tall',
+        habitat: 'Found in Lowland tropical evergreen forests.',
+        description: 'White Nato is a large, evergreen tropical hardwood tree in the Sapotaceae family with a straight trunk, rounded crown, elongated leaves clustered near branch tips, and fleshy rounded green fruits.',
+        interestingFacts: 'White Nato is valued for its fine-grained, medium-heavy cream timber used for cabinetry, carving, and picture frames, while its fleshy fruits have an edible pulp that feeds forest wildlife.'
+      },
+      {
+        id: 'SF-38',
+        num: 38,
+        commonName: 'Yakal-kaliot',
+        scientificName: 'Hopea malibato',
+        familyName: 'Dipterocarpaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Critically Endangered',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 36 meters tall',
+        habitat: 'Found in Primary evergreen dipterocarp forests.',
+        description: 'Yakal-kaliot is a medium-sized to large evergreen hardwood tree endemic to the Philippines with a tall, straight trunk, smooth grayish to dark-brown bark, and lance-shaped leaves.',
+        interestingFacts: 'Yakal-kaliot produces extraordinarily dense, heavy, and decay-resistant timber traditionally used for bridges, wharves, shipbuilding, and railway ties. It is a rare Philippine endemic species.'
+      },
+      {
+        id: 'SF-39',
+        num: 39,
+        commonName: 'Yakal-saplungan',
+        scientificName: 'Hopea plagata',
+        familyName: 'Dipterocarpaceae',
+        uses: 'Timber',
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Vulnerable',
+        height: 'Up to 55 meters tall',
+        habitat: 'Found in Lowland dipterocarp forests.',
+        description: 'Yakal-saplungan is a large, evergreen tropical hardwood tree native to the Philippines with a tall, straight trunk, broad crown, and extremely hard, heavy wood.',
+        interestingFacts: 'Yakal-saplungan is renowned for its towering height and iron-like timber strength. Like other dipterocarps, it produces winged fruits that autorotate as they fall to disperse seeds.'
       }
     ];
 
     // App State
     let activeTab = 'home';
-    let activeTreeId = 'SF-001';
-    let scannedTreeIds = ['SF-001', 'SF-003', 'SF-007'];
+    let activeTreeId = 'SF-01';
+    let scannedTreeIds = ['SF-01', 'SF-15', 'SF-20', 'SF-32', 'SF-38'];
     let selectedFamilyFilter = 'ALL';
+    let selectedOriginFilter = 'ALL';
     let soundActive = true;
     let rearCameraStream = null;
-    let showLogoSwoosh = true;
+
+    /*************************************************************
+     * 1B. EXACT VECTOR REPLICATION OF SCANIFLORA LOGO (image_419bee.png)
+     *     Supports:
+     *     - interactive: adds #bpart-* IDs for the Brand tab inspector
+     *     - includeWordmark: adds ScaniFlora & tagline below the phone frame
+     *     - canopyOnly: crops viewBox to the Leaf Canopy & QR Code
+     *************************************************************/
+    function generateExactScaniFloraLogoSVG(options = {}) {
+      const {
+        interactive = false,
+        includeWordmark = false,
+        canopyOnly = false
+      } = options;
+
+      const idAttr = (part) => interactive ? `id="bpart-${part}" class="logo-part"` : '';
+
+      const viewBox = canopyOnly
+        ? '100 84 160 118'
+        : (includeWordmark ? '40 4 280 412' : '65 6 230 350');
+
+      // Dense internal QR modules replicating image_419bee.png
+      const qrCoords = [
+        [3,0],[5,0],[6,0],
+        [4,1],[5,1],
+        [3,2],[5,2],
+        [0,3],[2,3],[4,3],[6,3],[7,3],[9,3],
+        [1,4],[3,4],[4,4],[5,4],[8,4],[10,4],
+        [0,5],[2,5],[3,5],[5,5],[7,5],[9,5],[10,5],
+        [1,6],[3,6],[4,6],[6,6],[7,6],[8,6],
+        [4,7],[6,7],[8,7],[9,7],[10,7],
+        [3,8],[5,8],[6,8],[7,8],[9,8],
+        [4,9],[6,9],[8,9],[10,9],
+        [3,10],[5,10],[7,10],[8,10],[9,10]
+      ];
+      const qrModules = qrCoords.map(([cx, cy]) =>
+        `<rect x="${145 + cx * 6.36}" y="${125 + cy * 6.36}" width="5.6" height="5.6" fill="#0D4829"/>`
+      ).join('');
+
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" class="w-full h-full select-none">
+          ${!canopyOnly ? `
+          <!-- 1. OUTER MOBILE SMARTPHONE FRAME (#1C1C1C) -->
+          <g ${idAttr('frame')}>
+            <!-- Top Smartphone Bezel + Side Frame Extensions -->
+            <path d="M 85 92 V 40 Q 85 12 113 12 H 247 Q 275 12 275 40 V 92 H 270 V 54 H 90 V 92 Z" fill="#1C1C1C"/>
+            <!-- Top Sensor Dot, Camera Circle & Speaker Slot -->
+            <circle cx="180" cy="23" r="2.8" fill="#FFFFFF"/>
+            <circle cx="143" cy="34.5" r="4.2" fill="#FFFFFF"/>
+            <rect x="158" y="32.3" width="44" height="4.4" rx="2.2" fill="#FFFFFF"/>
+            <!-- Bottom Smartphone Bezel + Home Button -->
+            <path d="M 85 264 V 320 Q 85 348 113 348 H 247 Q 275 348 275 320 V 264 H 270 V 302 H 90 V 264 Z" fill="#1C1C1C"/>
+            <circle cx="180" cy="325" r="14.5" fill="#FFFFFF"/>
+          </g>
+
+          <!-- 2. SCANNING RETICLE CORNERS (#1C1C1C) -->
+          <g ${idAttr('reticle')}>
+            <path d="M 93 152 V 108 Q 93 92 109 92 H 154" fill="none" stroke="#1C1C1C" stroke-width="6.5" stroke-linecap="square"/>
+            <path d="M 206 265 H 250 Q 266 265 266 249 V 202" fill="none" stroke="#1C1C1C" stroke-width="6.5" stroke-linecap="square"/>
+          </g>
+          ` : ''}
+
+          <!-- 3. LEAF CANOPY & CENTRAL QR CODE GRID -->
+          <g ${idAttr('canopy')}>
+            <!-- Top Center Leaves -->
+            <path d="M 180 92 C 176 104, 179 115, 186 121 C 194 115, 196 102, 188 91 Z" fill="#3B9862"/>
+            <path d="M 166 102 C 162 110, 165 117, 172 121 C 176 115, 174 107, 166 102 Z" fill="#78C090"/>
+            <path d="M 202 101 C 196 107, 196 115, 201 121 C 208 117, 209 109, 202 101 Z" fill="#78C090"/>
+            <path d="M 150 107 C 147 114, 150 120, 157 122 C 160 116, 157 110, 150 107 Z" fill="#3B9862"/>
+            <path d="M 215 108 C 210 113, 211 119, 217 122 C 222 118, 221 111, 215 108 Z" fill="#78C090"/>
+
+            <!-- Left Outer & Mid Leaves (#0D4829, #3B9862, #78C090) -->
+            <path d="M 127 113 C 126 125, 133 133, 143 134 C 143 123, 137 115, 127 113 Z" fill="#0D4829"/>
+            <path d="M 116 132 C 117 142, 125 148, 135 147 C 134 138, 126 132, 116 132 Z" fill="#3B9862"/>
+            <path d="M 132 138 C 132 146, 138 151, 145 151 L 145 142 C 141 139, 137 138, 132 138 Z" fill="#3B9862"/>
+            <path d="M 108 153 C 113 164, 125 169, 138 166 C 133 155, 121 151, 108 153 Z" fill="#0D4829"/>
+            <path d="M 122 170 C 127 179, 136 182, 145 179 L 145 168 C 137 167, 129 168, 122 170 Z" fill="#0D4829"/>
+            <path d="M 118 184 C 122 191, 130 193, 138 190 C 135 184, 127 182, 118 184 Z" fill="#0D4829"/>
+            <path d="M 131 195 C 134 202, 141 204, 148 201 C 146 195, 139 193, 131 195 Z" fill="#0D4829"/>
+            <path d="M 142 204 C 144 210, 150 212, 156 208 C 154 203, 148 202, 142 204 Z" fill="#0D4829"/>
+
+            <!-- Right Outer & Mid Leaves (#3B9862, #78C090, #0D4829) -->
+            <path d="M 233 113 C 234 125, 227 133, 217 134 C 217 123, 223 115, 233 113 Z" fill="#3B9862"/>
+            <path d="M 244 132 C 243 142, 235 148, 225 147 C 226 138, 234 132, 244 132 Z" fill="#78C090"/>
+            <path d="M 228 138 C 228 146, 222 151, 215 151 L 215 142 C 219 139, 223 138, 228 138 Z" fill="#3B9862"/>
+            <path d="M 252 153 C 247 164, 235 169, 222 166 C 227 155, 239 151, 252 153 Z" fill="#3B9862"/>
+            <path d="M 238 170 C 233 179, 224 182, 215 179 L 215 168 C 223 167, 231 168, 238 170 Z" fill="#3B9862"/>
+            <path d="M 242 184 C 238 191, 230 193, 222 190 C 225 184, 233 182, 242 184 Z" fill="#78C090"/>
+            <path d="M 229 195 C 226 202, 219 204, 212 201 C 214 195, 221 193, 229 195 Z" fill="#0D4829"/>
+            <path d="M 218 204 C 216 210, 210 212, 204 208 C 206 203, 212 202, 218 204 Z" fill="#0D4829"/>
+
+            <!-- QR Code 3 Corner Finder Squares -->
+            <rect x="145" y="125" width="19" height="19" fill="none" stroke="#0D4829" stroke-width="3.4"/>
+            <rect x="150.2" y="130.2" width="8.6" height="8.6" fill="#0D4829"/>
+
+            <rect x="196" y="125" width="19" height="19" fill="none" stroke="#0D4829" stroke-width="3.4"/>
+            <rect x="201.2" y="130.2" width="8.6" height="8.6" fill="#0D4829"/>
+
+            <rect x="145" y="176" width="19" height="19" fill="none" stroke="#0D4829" stroke-width="3.4"/>
+            <rect x="150.2" y="181.2" width="8.6" height="8.6" fill="#0D4829"/>
+
+            <!-- QR Code Data Modules -->
+            ${qrModules}
+          </g>
+
+          ${!canopyOnly ? `
+          <!-- 4. TWO-TONE 'S' TRUNK & ROOTS (#0D4829 & #3B9862) -->
+          <g ${idAttr('trunk')}>
+            <!-- Upper-Left Dark Green Branch Fork -->
+            <path d="M 164 211 C 158 205, 151 200, 142 197 C 150 198, 156 200, 161 204 C 159 201, 158 198, 158 195 L 163 195 C 163 200, 165 204, 169 208 Z" fill="#0D4829"/>
+            <!-- Main Dark Green Left 'S' Curve & Bifurcated Left Root Flare -->
+            <path d="M 188 200 C 165 200, 156 208, 158 219 C 160 230, 189 235, 189 249 C 189 258, 174 263, 148 266 L 138 263 L 125 266 C 142 256, 155 253, 166 254 C 175 252, 178 247, 177 242 C 175 233, 147 228, 147 216 C 147 204, 163 197, 188 200 Z" fill="#0D4829"/>
+            <!-- Medium Green Right 'S' Curve & Upper-Right Branch -->
+            <path d="M 215 197 C 197 198, 170 202, 170 215 C 170 225, 199 230, 199 246 C 199 256, 189 262, 174 265 C 192 262, 204 256, 205 245 C 206 229, 179 224, 179 214 C 179 206, 196 203, 215 197 Z" fill="#3B9862"/>
+            <!-- Bifurcated Right Root Flare -->
+            <path d="M 203 249 C 212 254, 222 260, 234 266 L 214 261 L 204 266 L 194 259 Z" fill="#3B9862"/>
+          </g>
+          ` : ''}
+
+          ${includeWordmark && !canopyOnly ? `
+          <!-- 5. SCANIFLORA WORDMARK & TAGLINE -->
+          <g ${idAttr('type')}>
+            <text x="180" y="382" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="800" font-size="34" fill="#0D4829">
+              <tspan fill="#3B9862">Scani</tspan><tspan fill="#0D4829">Flora</tspan>
+            </text>
+            <text x="180" y="403" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="500" font-size="14" fill="#555555">
+              Every tree has a story.
+            </text>
+          </g>
+          ` : ''}
+        </svg>
+      `;
+    }
 
     /*************************************************************
      * 2. DETERMINISTIC SVG QR CODE GENERATOR (WITH LEAF CANOPY)
@@ -1413,7 +2000,7 @@
           exitBtn.classList.remove('hidden');
           exitBtn.classList.add('flex');
         }
-        showToast('Full Screen Mobile Viewport Active (100vw × 100dvh)');
+        showToast('Full Screen Mobile Viewport Active (100vw x 100dvh)');
       } else {
         if (label) label.textContent = 'Fit Mode: Phone Frame';
         if (toolbar) toolbar.classList.remove('hidden');
@@ -1488,8 +2075,8 @@
     }
 
     function statusPillStyle(status) {
-      if (status === 'Critically Endangered') return 'bg-red-100 text-red-800 border-red-200';
-      if (status === 'Vulnerable') return 'bg-amber-100 text-amber-800 border-amber-200';
+      if (status.includes('Critically Endangered') || status === 'Endangered') return 'bg-red-100 text-red-800 border-red-200';
+      if (status.includes('Vulnerable') || status.includes('Threatened')) return 'bg-amber-100 text-amber-800 border-amber-200';
       return 'bg-sf-tint text-sf-dark border-sf-light/50';
     }
 
@@ -1506,15 +2093,18 @@
       const container = document.getElementById('home-featured-trees');
       if (!container) return;
 
-      container.innerHTML = treesDatabase.slice(0, 4).map(tree => `
+      const featuredIds = ['SF-01', 'SF-15', 'SF-20', 'SF-32', 'SF-38'];
+      const featuredList = featuredIds.map(id => getTree(id));
+
+      container.innerHTML = featuredList.map(tree => `
         <div onclick="openTreeProfileSheet('${tree.id}')" class="bg-white p-3 rounded-2xl border border-sf-dark/10 shadow-sm flex items-center gap-3 cursor-pointer active:scale-[0.99] transition">
           <div class="w-14 h-14 rounded-xl bg-sf-cream p-1.5 shrink-0 border border-sf-dark/10">
             ${buildTreeQRCodeSVG(tree.id + tree.scientificName, false)}
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center justify-between gap-1">
-              <span class="font-mono text-[10px] font-bold text-sf-mid">${tree.id}</span>
-              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.status)}">${tree.status}</span>
+              <span class="font-mono text-[10px] font-bold text-sf-mid">#${tree.num} • ${tree.id}</span>
+              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.iucnStatus)}">IUCN: ${tree.iucnStatus}</span>
             </div>
             <h4 class="text-sm font-extrabold text-sf-black truncate mt-0.5">${tree.commonName}</h4>
             <p class="text-[11px] italic text-neutral-500 truncate">${tree.scientificName} • ${tree.familyName}</p>
@@ -1536,23 +2126,38 @@
             ${buildTreeQRCodeSVG(tree.id + tree.scientificName, false)}
           </div>
           <div>
-            <p class="text-xs font-extrabold leading-none">${tree.commonName}</p>
+            <p class="text-xs font-extrabold leading-none">${tree.num}. ${tree.commonName}</p>
             <p class="text-[10px] font-mono text-sf-light mt-0.5">${tree.id}</p>
           </div>
         </button>
       `).join('');
     }
 
+    function setOriginFilter(originVal) {
+      selectedOriginFilter = originVal;
+      ['ALL', 'native', 'non-native'].forEach(k => {
+        const btn = document.getElementById(`origin-pill-${k}`);
+        if (!btn) return;
+        if (k === originVal) {
+          btn.className = 'px-3 py-1 rounded-lg text-[11px] font-bold bg-sf-black text-white transition';
+        } else {
+          btn.className = 'px-3 py-1 rounded-lg text-[11px] font-bold bg-sf-cream text-sf-dark border border-sf-dark/15 transition';
+        }
+      });
+      renderMobileTreeInventory();
+    }
+
     function renderMobileTreeInventory() {
       const searchEl = document.getElementById('trees-search-input');
       const pillsEl = document.getElementById('trees-family-pills');
       const listEl = document.getElementById('mobile-trees-list');
+      const subEl = document.getElementById('trees-results-subtitle');
       if (!listEl) return;
 
       const families = ['ALL', ...new Set(treesDatabase.map(t => t.familyName))];
       pillsEl.innerHTML = families.map(fam => `
         <button onclick="setFamilyFilter('${fam}')" class="snap-center-child shrink-0 px-3 py-1 rounded-full text-[11px] font-bold transition ${selectedFamilyFilter === fam ? 'bg-sf-dark text-white' : 'bg-sf-cream text-sf-black/75 border border-sf-dark/10'}">
-          ${fam === 'ALL' ? `All (${treesDatabase.length})` : fam}
+          ${fam === 'ALL' ? `All Families (${families.length - 1})` : fam}
         </button>
       `).join('');
 
@@ -1562,10 +2167,16 @@
           t.commonName.toLowerCase().includes(q) ||
           t.scientificName.toLowerCase().includes(q) ||
           t.familyName.toLowerCase().includes(q) ||
+          t.uses.toLowerCase().includes(q) ||
           t.id.toLowerCase().includes(q);
         const matchFam = selectedFamilyFilter === 'ALL' || t.familyName === selectedFamilyFilter;
-        return matchQ && matchFam;
+        const matchOrig = selectedOriginFilter === 'ALL' || t.origin === selectedOriginFilter;
+        return matchQ && matchFam && matchOrig;
       });
+
+      if (subEl) {
+        subEl.textContent = `Showing ${filtered.length} of ${treesDatabase.length} documented species`;
+      }
 
       listEl.innerHTML = filtered.map(tree => `
         <div onclick="openTreeProfileSheet('${tree.id}')" class="bg-white rounded-2xl p-3.5 border border-sf-dark/10 shadow-sm space-y-2.5 cursor-pointer active:scale-[0.99] transition">
@@ -1574,19 +2185,23 @@
               ${buildTreeQRCodeSVG(tree.id + tree.scientificName, true)}
             </div>
             <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-1">
-                <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-sf-black text-sf-light">${tree.id}</span>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.status)}">${tree.status}</span>
+              <div class="flex items-center justify-between gap-1 flex-wrap">
+                <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-sf-black text-sf-light">#${tree.num} • ${tree.id}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.iucnStatus)}">IUCN: ${tree.iucnStatus}</span>
               </div>
               <h3 class="text-base font-extrabold text-sf-black mt-1 truncate">${tree.commonName}</h3>
               <p class="text-xs italic text-sf-dark font-medium truncate">${tree.scientificName}</p>
-              <p class="text-[11px] text-neutral-500 font-semibold">Family: ${tree.familyName}</p>
+              <div class="flex items-center gap-2 mt-0.5 text-[11px] text-neutral-500 font-semibold">
+                <span>${tree.familyName}</span>
+                <span>•</span>
+                <span class="uppercase text-[10px] font-bold ${tree.origin === 'native' ? 'text-sf-mid' : 'text-amber-700'}">${tree.origin}</span>
+              </div>
             </div>
           </div>
           <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">${tree.description}</p>
           <div class="pt-2 border-t border-neutral-100 flex items-center justify-between text-xs">
-            <span class="text-[11px] text-neutral-500 truncate max-w-[180px]">${tree.habitat}</span>
-            <span class="font-extrabold text-sf-mid">Read Story &rarr;</span>
+            <span class="text-[11px] font-semibold text-sf-dark truncate max-w-[200px]">Use: ${tree.uses} • DAO: ${tree.daoStatus}</span>
+            <span class="font-extrabold text-sf-mid">Story &rarr;</span>
           </div>
         </div>
       `).join('');
@@ -1598,13 +2213,13 @@
     }
 
     /*************************************************************
-     * 6. SLIDE-UP TREE STORY & PROFILE SHEET
+     * 6. SLIDE-UP TREE STORY & PROFILE SHEET (WITH CSU ECOPARK FIELDS)
      *************************************************************/
     function openTreeProfileSheet(treeId) {
       const tree = getTree(treeId);
       activeTreeId = tree.id;
 
-      document.getElementById('sheet-tag-badge').textContent = `QR TAG: ${tree.id}`;
+      document.getElementById('sheet-tag-badge').textContent = `SPECIES #${tree.num} • ${tree.id}`;
       const body = document.getElementById('tree-sheet-body');
 
       body.innerHTML = `
@@ -1614,28 +2229,33 @@
             ${buildTreeQRCodeSVG(tree.id + tree.scientificName, true)}
           </div>
           <div class="flex-1 min-w-0">
-            <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.status)} mb-1">
-              ${tree.status}
-            </span>
+            <div class="flex flex-wrap items-center gap-1 mb-1">
+              <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full ${tree.origin === 'native' ? 'bg-sf-dark text-sf-light' : 'bg-amber-100 text-amber-900'}">
+                ${tree.origin}
+              </span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusPillStyle(tree.iucnStatus)}">
+                IUCN: ${tree.iucnStatus}
+              </span>
+            </div>
             <h2 class="text-xl font-serif font-bold text-sf-black leading-tight">${tree.commonName}</h2>
             <p class="text-xs italic font-semibold text-sf-mid mt-0.5">${tree.scientificName}</p>
             <p class="text-[11px] font-bold text-neutral-500 mt-0.5">Family: ${tree.familyName}</p>
           </div>
         </div>
 
-        <!-- Taxonomy & Habitat Grid -->
+        <!-- CSU Ecopark Taxonomy, Conservation & Use Grid -->
         <div class="grid grid-cols-2 gap-2.5">
           <div class="bg-white p-3 rounded-2xl border border-sf-dark/10">
-            <span class="text-[10px] font-bold uppercase text-neutral-400 block">Common Name</span>
-            <span class="text-xs font-extrabold text-sf-black">${tree.commonName}</span>
+            <span class="text-[10px] font-bold uppercase text-neutral-400 block">IUCN Red List Status</span>
+            <span class="text-xs font-extrabold text-sf-black">${tree.iucnStatus}</span>
           </div>
           <div class="bg-white p-3 rounded-2xl border border-sf-dark/10">
-            <span class="text-[10px] font-bold uppercase text-neutral-400 block">Scientific Name</span>
-            <span class="text-xs font-bold italic text-sf-dark">${tree.scientificName}</span>
+            <span class="text-[10px] font-bold uppercase text-neutral-400 block">DAO 2026-20 Status</span>
+            <span class="text-xs font-extrabold text-sf-dark">${tree.daoStatus}</span>
           </div>
           <div class="bg-white p-3 rounded-2xl border border-sf-dark/10">
-            <span class="text-[10px] font-bold uppercase text-neutral-400 block">Family Name</span>
-            <span class="text-xs font-extrabold text-sf-mid">${tree.familyName}</span>
+            <span class="text-[10px] font-bold uppercase text-neutral-400 block">Primary Use/s</span>
+            <span class="text-xs font-extrabold text-sf-mid capitalize">${tree.uses}</span>
           </div>
           <div class="bg-white p-3 rounded-2xl border border-sf-dark/10">
             <span class="text-[10px] font-bold uppercase text-neutral-400 block">Typical Height</span>
@@ -1644,14 +2264,14 @@
         </div>
 
         <!-- Habitat Strip -->
-        <div class="bg-sf-tint rounded-2xl p-3.5 border border-sf-dark/10 flex items-center gap-2.5">
-          <svg class="w-5 h-5 text-sf-dark shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div class="bg-sf-tint rounded-2xl p-3.5 border border-sf-dark/10 flex items-start gap-2.5">
+          <svg class="w-5 h-5 text-sf-dark shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
           <div>
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-dark block">Habitat &amp; Field Station</span>
-            <span class="text-xs font-semibold text-sf-black">${tree.habitat}</span>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-sf-dark block">Habitat &amp; Distribution</span>
+            <span class="text-xs font-semibold text-sf-black leading-snug">${tree.habitat}</span>
           </div>
         </div>
 
@@ -1659,25 +2279,16 @@
         <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-1.5">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-sf-dark"></span>
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">Tree Description &amp; Characteristics</h3>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">Botanical Description</h3>
           </div>
           <p class="text-xs text-neutral-700 leading-relaxed">${tree.description}</p>
-        </div>
-
-        <!-- Uses and Benefits -->
-        <div class="bg-white rounded-3xl p-4 border border-sf-dark/10 shadow-sm space-y-1.5">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-sf-mid"></span>
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-dark">Uses and Benefits</h3>
-          </div>
-          <p class="text-xs text-neutral-700 leading-relaxed">${tree.usesAndBenefits}</p>
         </div>
 
         <!-- Interesting Facts -->
         <div class="bg-sf-dark text-white rounded-3xl p-4 shadow-sm space-y-1.5">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-sf-light"></span>
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-light">Interesting Facts</h3>
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-sf-light">Interesting Fact &amp; Uses</h3>
           </div>
           <p class="text-xs text-white/90 leading-relaxed">${tree.interestingFacts}</p>
         </div>
@@ -1787,7 +2398,7 @@
       barWrap.classList.remove('hidden');
       barFill.style.width = '20%';
       statusText.textContent = `DECODING ${tree.id}...`;
-      plaqueCard.classList.add('scale-105', 'ring-4', 'ring-sf-swooshLight');
+      plaqueCard.classList.add('scale-105', 'ring-4', 'ring-sf-light');
 
       setTimeout(() => {
         barFill.style.width = '100%';
@@ -1802,10 +2413,10 @@
         updateAllCounters();
         barWrap.classList.add('hidden');
         barFill.style.width = '0%';
-        plaqueCard.classList.remove('scale-105', 'ring-4', 'ring-sf-swooshLight');
+        plaqueCard.classList.remove('scale-105', 'ring-4', 'ring-sf-light');
 
         openTreeProfileSheet(tree.id);
-        showToast(`QR Decoded: ${tree.commonName} (${tree.scientificName})`);
+        showToast(`QR Decoded: #${tree.num} ${tree.commonName} (${tree.scientificName})`);
       }, 720);
     }
 
@@ -1873,7 +2484,7 @@
       if (!select) return;
       select.innerHTML = treesDatabase.map(t => `
         <option value="${t.id}" ${t.id === activeTreeId ? 'selected' : ''}>
-          ${t.id} — ${t.commonName} (${t.scientificName})
+          #${t.num} (${t.id}) — ${t.commonName} (${t.scientificName})
         </option>
       `).join('');
       renderPlaqueCard(activeTreeId);
@@ -1889,36 +2500,42 @@
       const tree = getTree(treeId);
       document.getElementById('plaque-common-name').textContent = tree.commonName;
       document.getElementById('plaque-sci-name').textContent = tree.scientificName;
-      document.getElementById('plaque-family-name').textContent = `Family: ${tree.familyName}`;
+      document.getElementById('plaque-family-name').textContent = `Family: ${tree.familyName} • Use: ${tree.uses}`;
       document.getElementById('plaque-tag-id').textContent = `TAG: ${tree.id}`;
+      const originEl = document.getElementById('plaque-origin-badge');
+      if (originEl) originEl.textContent = `${tree.origin.toUpperCase()} • ${tree.iucnStatus.toUpperCase()}`;
       document.getElementById('plaque-svg-container').innerHTML = buildTreeQRCodeSVG(tree.id + tree.scientificName, true);
     }
 
     function autoFillYlangYlang() {
-      document.getElementById('new-tree-common').value = 'Ylang-Ylang';
+      document.getElementById('new-tree-common').value = 'Ilang-Ilang';
       document.getElementById('new-tree-sci').value = 'Cananga odorata';
       document.getElementById('new-tree-family').value = 'Annonaceae';
-      document.getElementById('new-tree-habitat').value = 'Fragrant Botanical Walk • Station 09';
-      document.getElementById('new-tree-desc').value = 'A fast-growing tropical tree famous for its drooping, long-petalled greenish-yellow flowers that release a rich floral fragrance at dusk.';
-      document.getElementById('new-tree-uses').value = 'Essential oil distilled from its flowers is prized globally in fine perfumery and aromatherapy. Also planted as an ornamental shade tree.';
-      document.getElementById('new-tree-facts').value = 'The name "Ylang-Ylang" comes from the Tagalog word "ilang-ilang", meaning "flower of flowers" fluttering in the breeze.';
-      showToast('Auto-filled Ylang-Ylang botanical data');
+      document.getElementById('new-tree-uses').value = 'Essential oil, ornamental';
+      document.getElementById('new-tree-height').value = 'Up to 15–25 meters tall';
+      document.getElementById('new-tree-habitat').value = 'Found in primary and secondary lowland forests.';
+      document.getElementById('new-tree-desc').value = 'A fast-growing native tropical tree famous for its drooping, long-petalled greenish-yellow flowers that release a rich floral fragrance.';
+      document.getElementById('new-tree-facts').value = 'The name "Ilang-Ilang" comes from the Tagalog word meaning "flower of flowers," and its essential oil is prized globally in fine perfumery.';
+      showToast('Auto-filled Ilang-Ilang botanical data');
     }
 
     function handleSaveNewTree(e) {
       e.preventDefault();
       const nextNum = treesDatabase.length + 1;
-      const newId = `SF-00${nextNum}`;
+      const newId = `SF-${String(nextNum).padStart(2, '0')}`;
       const newTree = {
         id: newId,
+        num: nextNum,
         commonName: document.getElementById('new-tree-common').value.trim(),
         scientificName: document.getElementById('new-tree-sci').value.trim(),
         familyName: document.getElementById('new-tree-family').value.trim(),
-        status: 'Least Concern',
+        uses: document.getElementById('new-tree-uses').value.trim(),
+        origin: 'native',
+        iucnStatus: 'Least Concern',
+        daoStatus: 'Other Wildlife Species',
+        height: document.getElementById('new-tree-height').value.trim(),
         habitat: document.getElementById('new-tree-habitat').value.trim(),
-        height: '12–20 m',
         description: document.getElementById('new-tree-desc').value.trim(),
-        usesAndBenefits: document.getElementById('new-tree-uses').value.trim(),
         interestingFacts: document.getElementById('new-tree-facts').value.trim()
       };
 
@@ -1935,37 +2552,33 @@
     }
 
     /*************************************************************
-     * 9. BRAND TAB: LOGO ELEMENT INSPECTOR & HEX CLIPBOARD
+     * 9. BRAND TAB: STRICT 4-ELEMENT LOGO INSPECTOR & FAVICON COPY
      *************************************************************/
     const logoExplanations = {
       all: {
-        title: 'Complete ScaniFlora Emblem',
-        desc: 'Combines a smartphone silhouette, scanning reticle corners, a stylized "S" tree trunk with deep roots, a leaf canopy integrated with a QR code, and an orbital blue scanning swoosh.'
+        title: 'ScaniFlora — Every tree has a story.',
+        desc: 'Scaniflora is an application that makes tree identification easier and more accessible, especially for non-forestry individuals, naturally curious people, and tourists visiting an ecotourism sites.'
       },
       frame: {
         title: 'Outer Frame Elements — Mobile Frame',
-        desc: 'Set inside a mobile smartphone silhouette with speaker, camera, and home button. Emphasizes ScaniFlora’s identity as a mobile application and holistic digital information resource.'
+        desc: 'In the full layout, the icon is set inside a mobile smartphone silhouette with top camera/speaker sensors and a bottom home button. This emphasizes its identity as a digital application, mobile interface, and holistic information resource.'
       },
       reticle: {
-        title: 'Scanning Reticle Corners & Camera',
-        desc: 'Symbolizes camera targeting, active focus, framing, and scanning functionality—capturing and reading botanical QR codes attached to trees.'
+        title: 'Scanning Reticle Corners',
+        desc: 'Symbolizes camera targeting, active focus, framing, and scanning functionality. It conveys the precise action of capturing and reading botanical QR codes or plant data.'
       },
       trunk: {
-        title: "'S' Trunk & Grounding Roots",
-        desc: 'The tree trunk and roots are stylized into the letter "S", representing the initial for "Scan". The roots signify deep knowledge and connection to the earth.'
+        title: "'S' Trunk & Roots",
+        desc: "The two-tone tree trunk and grounding roots (#0D4829 & #3B9862) are stylized into the letter 'S', representing the initial for 'Scan'. The roots signify deep knowledge and a strong connection to the earth, while the trunk provides a sturdy foundation."
       },
       canopy: {
-        title: 'Leaf Canopy & Functional QR Code',
-        desc: 'A lush green leaf canopy seamlessly integrated with a QR code grid, symbolizing the fusion of nature ("Flora") and modern scanning technology ("Scan").'
-      },
-      swoosh: {
-        title: 'Orbital Blue Swoosh (Scanning Path)',
-        desc: 'Wraps dynamically around the central tree trunk to represent the path of information flow, digital network connectivity, and the action of scanning.'
+        title: 'Leaf Canopy & QR Code',
+        desc: 'The upper portion of the tree consists of a multi-tone green leaf canopy seamlessly integrated with a functional square QR code grid. This element symbolizes the fusion of nature ("Flora") and modern scanning technology ("Scan").'
       }
     };
 
     function inspectLogoElement(key) {
-      const parts = ['frame', 'reticle', 'canopy', 'trunk', 'swoosh', 'type'];
+      const parts = ['frame', 'reticle', 'canopy', 'trunk', 'type'];
       parts.forEach(p => {
         const el = document.getElementById(`bpart-${p}`);
         if (!el) return;
@@ -1979,7 +2592,7 @@
         }
       });
 
-      ['all', 'frame', 'reticle', 'trunk', 'canopy', 'swoosh'].forEach(k => {
+      ['all', 'frame', 'reticle', 'trunk', 'canopy'].forEach(k => {
         const pill = document.getElementById(`lpill-${k}`);
         if (!pill) return;
         if (k === key) {
@@ -1997,36 +2610,33 @@
       `;
     }
 
-    function toggleBrandSwoosh() {
-      showLogoSwoosh = !showLogoSwoosh;
-      const swooshEl = document.getElementById('bpart-swoosh');
-      const camEl = document.getElementById('bpart-camera-icon');
-      const btn = document.getElementById('brand-swoosh-toggle');
-
-      if (showLogoSwoosh) {
-        swooshEl.classList.remove('hidden');
-        camEl.classList.remove('hidden');
-        btn.textContent = '+ Blue Swoosh: ON';
-      } else {
-        swooshEl.classList.add('hidden');
-        camEl.classList.add('hidden');
-        btn.textContent = 'Brand Sheet Mode';
-        inspectLogoElement('all');
-      }
-    }
-
-    function copyHex(hex) {
+    function copyTextToClipboard(text, toastMessage) {
       const area = document.createElement('textarea');
-      area.value = hex;
+      area.value = text;
       document.body.appendChild(area);
       area.select();
       try {
         document.execCommand('copy');
-        showToast(`Copied ${hex} to clipboard`);
+        showToast(toastMessage);
       } catch (e) {
-        showToast(`Swatch: ${hex}`);
+        showToast('Copied to clipboard');
       }
       document.body.removeChild(area);
+    }
+
+    function copyHex(hex) {
+      copyTextToClipboard(hex, `Copied ${hex} to clipboard`);
+    }
+
+    function copyMasterLogoSVG() {
+      const svgMarkup = generateExactScaniFloraLogoSVG({ interactive: false, includeWordmark: false }).trim();
+      copyTextToClipboard(svgMarkup, 'Copied exact ScaniFlora SVG logo code');
+    }
+
+    function copyFaviconLine() {
+      const linkEl = document.querySelector('link[rel="icon"]');
+      const codeLine = linkEl ? linkEl.outerHTML : '';
+      copyTextToClipboard(codeLine, 'Copied <link rel="icon"> favicon line');
     }
 
     /*************************************************************
@@ -2051,9 +2661,36 @@
     }
 
     /*************************************************************
-     * 11. INITIALIZE MOBILE APP ON LOAD
+     * 11. INITIALIZE MOBILE APP & MOUNT EXACT SVG LOGOS ON LOAD
      *************************************************************/
     window.onload = function () {
+      // Mount exact image_419bee.png SVG logos across Splash, Header, and Brand Inspector
+      const splashMount = document.getElementById('splash-logo-mount');
+      if (splashMount) {
+        splashMount.innerHTML = generateExactScaniFloraLogoSVG({ interactive: false, includeWordmark: false });
+      }
+
+      const headerMount = document.getElementById('header-logo-mount');
+      if (headerMount) {
+        headerMount.innerHTML = generateExactScaniFloraLogoSVG({ interactive: false, includeWordmark: false });
+      }
+
+      const brandMount = document.getElementById('brand-logo-mount');
+      if (brandMount) {
+        brandMount.innerHTML = generateExactScaniFloraLogoSVG({ interactive: true, includeWordmark: true });
+      }
+
+      const miniCanopy = document.getElementById('mini-canopy-preview');
+      if (miniCanopy) {
+        miniCanopy.innerHTML = generateExactScaniFloraLogoSVG({ canopyOnly: true });
+      }
+
+      // Mount multi-size Favicon previews in Brand Tab
+      ['16', '32', '64'].forEach(sz => {
+        const el = document.getElementById(`fav-preview-${sz}`);
+        if (el) el.innerHTML = generateExactScaniFloraLogoSVG({ interactive: false, includeWordmark: false });
+      });
+
       updateAllCounters();
       renderHomeFeaturedTrees();
       updateViewfinderPlaque(getTree(activeTreeId));
